@@ -261,31 +261,7 @@ const Navbar = () => {
       <div className="h-16 md:h-20"></div>
 
       {/* Demo Content */}
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center py-20">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Welcome to LearnSmart
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Experience AI-powered voice-interactive learning like never before
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-              {[
-                { title: "Real-time Teaching", desc: "Interactive AI vocal sessions" },
-                { title: "Problem Solving", desc: "Submit & get solutions on time" },
-                { title: "Voice Learning", desc: "Natural conversation flow" }
-              ].map((feature, i) => (
-                <div key={i} className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-blue-100">
-                  <h3 className="font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm">{feature.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, nihil repellat! Voluptatibus dolorum beatae quo iusto magni. Incidunt ullam iure cumque ducimus est error impedit, praesentium illo, assumenda modi cupiditate labore, vel dolore ut deserunt id ea harum repellat dignissimos hic. Repudiandae eveniet, repellendus optio quisquam ducimus soluta tempora molestias, eum ab provident totam, quam vero. Rem quasi, consectetur necessitatibus doloribus nulla maiores commodi explicabo? Adipisci et numquam autem, neque nostrum incidunt nam architecto! Ullam neque soluta ipsa ipsam? Rem atque aspernatur libero! Debitis ut, eligendi pariatur fugit, odio eaque consequatur porro laborum nulla veritatis animi. Dolore repudiandae nostrum nam, iste expedita temporibus optio quidem recusandae tempore explicabo atque laudantium possimus fugiat error sed dolorum dolores nobis, dignissimos illo nisi ducimus. Sapiente deleniti obcaecati modi possimus rem dolorem incidunt amet, placeat voluptatum consectetur quo officia eaque quibusdam praesentium suscipit ea velit libero eligendi laboriosam dicta expedita necessitatibus illum! A, perspiciatis maiores cupiditate excepturi fugiat pariatur commodi quam tempore molestias magnam ipsa eligendi quidem eos. Aut natus adipisci illum harum porro, voluptatum vero illo culpa eum. Illo, mollitia! Esse mollitia temporibus beatae saepe tenetur nobis unde consectetur natus illo placeat totam magnam similique adipisci iure et harum dolorum, perferendis aliquam quis? Nulla, totam nam ipsum accusantium culpa obcaecati placeat adipisci ipsa? Nemo quaerat sit ex quod hic quae earum. Eos ipsum, nemo porro fugit non praesentium atque veniam perferendis sint voluptates vitae quisquam. Reprehenderit labore, similique necessitatibus, modi rerum dolor, facilis nemo dolorem soluta totam ea sequi fugiat. Veniam voluptatibus ipsum ex eos, earum repudiandae sequi tempora iure repellat fuga inventore exercitationem consequuntur beatae neque iste distinctio, vel quos perferendis, suscipit porro omnis magni excepturi. Ipsa aspernatur obcaecati quisquam magnam eum ipsum atque. Voluptate aliquam itaque cupiditate dicta est ad ratione consequatur debitis minus accusantium vitae saepe eius doloremque, iusto nobis officiis nostrum! Ipsa hic nulla nam, veniam tempore cumque omnis repellendus necessitatibus, rem sunt rerum ipsum voluptatibus libero officiis delectus. Unde eum libero, fugiat ut asperiores, explicabo eaque, beatae illum dolorum accusamus fuga deleniti eveniet magni. Quas saepe quae nemo assumenda tempore, culpa ea dolores mollitia qui numquam exercitationem doloribus.</p>
-      </div>
+     
     </>
   );
 };

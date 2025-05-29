@@ -14,7 +14,8 @@ import {
   Bell,
   Search,
   Sparkles,
-  AtSignIcon
+  AtSignIcon,
+  DollarSign
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -31,7 +32,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Learning Friends', icon: Users, href: '/friends' },
-    { name: 'My Journey', icon: Map, href: '/journey' },
+    { name: 'My Journey', icon: Map, href: '/journey'},{name:"Billing", icon:DollarSign, href:"/billing" },
   ];
 
   return (

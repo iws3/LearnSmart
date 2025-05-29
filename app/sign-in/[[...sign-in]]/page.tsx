@@ -33,7 +33,7 @@ const page = () => {
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-2xl mb-6">
               <Brain className="w-6 h-6" />
-              <span className="font-bold text-lg">EduAI Platform</span>
+              <span className="font-bold text-lg">LearnSmart</span>
             </div>
             <h1 className="text-4xl xl:text-5xl font-bold text-gray-900 mb-4 leading-tight">
               Welcome to the Future of
@@ -186,7 +186,7 @@ const page = () => {
             {/* Bottom CTA */}
             <div className="text-center mt-6">
               <p className="text-sm text-gray-600">
-                New to EduAI? 
+                New to LearnSmart? 
                 <a href="/sign-up" className="text-blue-600 hover:text-purple-600 font-semibold ml-1 transition-colors duration-300">
                   Create your account
                 </a>

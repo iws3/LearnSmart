@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { SignInButton, SignOutButton, SignedIn,SignedOut, UserButton } from '@clerk/nextjs';
 import { 
   Brain, 
   Users, 
@@ -12,7 +13,8 @@ import {
   X,
   Bell,
   Search,
-  Sparkles
+  Sparkles,
+  AtSignIcon
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -150,6 +152,17 @@ const Navbar = () => {
                   <span className="text-sm">{item.name}</span>
                 </Link>
               ))}
+            <SignedOut>
+
+               <Link
+                  
+                  href="/sign-in"
+                  className="nav-item-hover flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-blue-600 font-medium"
+                >
+                  <AtSignIcon className="w-5 h-5" />
+                  <span className="text-sm">SignIn</span>
+                </Link>
+                </SignedOut>
 
               {/* Notifications */}
               <button className="nav-item-hover relative p-3 rounded-xl text-gray-700 hover:text-blue-600">
@@ -160,21 +173,23 @@ const Navbar = () => {
               {/* Profile Dropdown */}
               <div className="flex items-center space-x-3 ml-4">
                 <div className="profile-ring">
-                  <Image
-                    src="/images/cta.svg"
-                    alt="Profile"
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
+                 <UserButton/>
                 </div>
                 <div className="hidden lg:block">
                   <p className="text-sm font-semibold text-gray-800">John Doe</p>
-                  <p className="text-xs text-blue-500">Premium Student</p>
+                  <p className="text-xs text-blue-500"> Student</p>
                 </div>
+                <SignedIn>
+                    <Link
+                  
+                  href="/sign-in"
+                  className="nav-item-hover flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-blue-600 font-medium"
+                >
                 <button className="nav-item-hover p-2 rounded-lg text-gray-700 hover:text-red-500">
                   <LogOut className="w-4 h-4" />
                 </button>
+                </Link>
+                </SignedIn>
               </div>
             </div>
 

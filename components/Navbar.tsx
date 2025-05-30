@@ -15,7 +15,8 @@ import {
   Search,
   Sparkles,
   AtSignIcon,
-  DollarSign
+  DollarSign,
+  CreativeCommons
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -31,8 +32,9 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'Learning Friends', icon: Users, href: '/friends' },
+    { name: 'Ai Tutors', icon: Users, href: '/companions' },
     { name: 'My Journey', icon: Map, href: '/journey'},{name:"Billing", icon:DollarSign, href:"/billing" },
+    {name:"create", icon:CreativeCommons, href:'/companions/new'}
   ];
 
   return (

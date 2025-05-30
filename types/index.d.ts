@@ -27,12 +27,24 @@ type Companion = Models.DocumentList<Models.Document> & {
 };
 
 interface CreateCompanion {
-  name: string;
-  subject: string;
-  topic: string;
-  voice: string;
-  style: string;
-  duration: number;
+    name: string;
+    subject: string;
+    topic?:string;
+    teaching_content: string;  // Note: snake_case for database
+    voice_type: string;
+    speaking_style: string;
+    language: string;
+    chat_duration: number;     // Will be validated as 1-6 minutes
+    learning_style: string;
+    motivation_level: string;
+    // author will be added automatically in the server action
+}
+// Types - Updated to match server interface
+
+
+interface CompanionData extends CreateCompanion {
+  icon: File | null;
+  iconPreview: string;
 }
 
 interface GetAllCompanions {

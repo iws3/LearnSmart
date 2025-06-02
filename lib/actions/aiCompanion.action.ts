@@ -22,7 +22,7 @@ export const getAllCompanions=async ({limit=10, page=1, subject, topic}:GetAllCo
 
     // connect our db- since we dont have a consistent connection to the server
     const supabase=createSupabaseClient();
-    let query=supabase.from('companions').select();
+    let query= supabase.from('companions').select();
     if(subject && topic){
         // specify the column, you wnat the likeness, and the actual pattern you are searching for...... looking for any mention of the subject within the subject
         query=query.ilike('subject',`%${subject}%`)
@@ -46,4 +46,18 @@ export const getAllCompanions=async ({limit=10, page=1, subject, topic}:GetAllCo
     const {data:companions, error}=await query;
     if(error) throw new Error(error.message || "there was and error fetching the companion")
         return companions;
+}
+
+// GET one tutor
+
+export const getCompanion=async(id:string)=>{
+    const supabase=createSupabaseClient()
+    const {data, error}= await supabase
+                 .from('companions')
+                .select()
+                .eq('id', id)
+    if(error) return console.log(error)
+    console.log("visiting server action with: ", data[0])
+    return data[0]
+                
 }

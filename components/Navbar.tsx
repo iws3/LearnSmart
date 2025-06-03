@@ -296,7 +296,7 @@ const Navbar = () => {
             {/* Desktop Navigation Items */}
             <div className="hidden md:flex items-center space-x-3">
               {/* Enhanced Search */}
-              <div className="search-modern relative mr-6">
+              {/* <div className="search-modern relative mr-6">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
@@ -304,7 +304,7 @@ const Navbar = () => {
                   className="w-72 pl-12 pr-6 py-3 rounded-2xl bg-transparent border-0 text-white placeholder-slate-400 focus:outline-none text-sm font-medium"
                 />
                 <Rocket className="absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
-              </div>
+              </div> */}
 
               {/* Navigation Items with Gradients */}
               {navItems.map((item, index) => (
@@ -400,14 +400,14 @@ const Navbar = () => {
                 </div>
 
                 {/* Mobile Search */}
-                <div className="search-modern relative mb-8 rounded-2xl">
+                {/* <div className="search-modern relative mb-8 rounded-2xl">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input
                     type="text"
                     placeholder="Search anything..."
                     className="w-full pl-12 pr-4 py-4 bg-transparent border-0 text-white placeholder-slate-400 focus:outline-none rounded-2xl"
                   />
-                </div>
+                </div> */}
 
                 {/* Mobile Navigation */}
                 <div className="space-y-3">

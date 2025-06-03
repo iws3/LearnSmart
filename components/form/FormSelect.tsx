@@ -35,7 +35,7 @@ const FormSelect = ({
 
   return (
     <div className="space-y-2">
-      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+      <label className="flex items-center gap-2 text-sm  text-gray-400">
         <Icon className="w-4 h-4" />
         {label}
         {required && <span className="text-red-500">*</span>}
@@ -44,20 +44,20 @@ const FormSelect = ({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none text-left flex items-center justify-between ${
+          className={`w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-200 px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none text-left flex items-center justify-between border-none outline-none ${
             error 
               ? 'border-red-300 bg-red-50 focus:border-red-500' 
               : 'border-gray-200 bg-white focus:border-blue-500 hover:border-gray-300'
           }`}
         >
-          <span className={value ? 'text-gray-900' : 'text-gray-500'}>
+          <span className={value ? 'text-gray-300' : 'text-gray-200'}>
             {value || 'Select an option'}
           </span>
           <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         
         {isOpen && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white border-2 border-gray-200 rounded-xl shadow-lg z-10 max-h-48 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-200 border-2 border-gray-900 rounded-xl shadow-lg z-10 max-h-48 overflow-y-auto">
             {options.map((option) => (
               <button
                 key={option}
@@ -66,7 +66,7 @@ const FormSelect = ({
                   onChange(option);
                   setIsOpen(false);
                 }}
-                className="w-full px-4 py-3 text-left hover:bg-blue-50 transition-colors flex items-center justify-between"
+                className="w-full px-4 py-3 text-left bg-gradient-to-br from-slate-800 via-slate-800 to-slate-800 text-gray-200 hover:bg-blue-50 transition-colors flex items-center justify-between "
               >
                 <span>{option}</span>
                 {value === option && <Check className="w-4 h-4 text-blue-600" />}

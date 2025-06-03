@@ -27,7 +27,7 @@ const FormTextarea = ({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={4}
-        className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:outline-none resize-none ${
+        className={`w-full px-4 py-3 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-200 rounded-xl border-2 transition-all duration-300 focus:outline-none resize-none border-none outline-none ${
           error 
             ? 'border-red-300 bg-red-50 focus:border-red-500' 
             : 'border-gray-200 bg-white focus:border-blue-500 focus:bg-blue-50/50'

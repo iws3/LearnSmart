@@ -275,8 +275,8 @@ const CompanionBuilder = () => {
             </div>
 
             {/* Teaching Content */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 rounded-2xl shadow-lg p-8 border border-gray-900">
+              <h2 className="text-2xl font-bold text-gray-300 mb-6 flex items-center gap-3">
                 <Target className="w-6 h-6 text-purple-600" />
                 Teaching Focus
               </h2>
@@ -293,8 +293,8 @@ const CompanionBuilder = () => {
             </div>
 
             {/* Voice & Communication */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-900 rounded-2xl shadow-lg p-8 border border-gray-900">
+              <h2 className="text-2xl font-bold text-gray-200 mb-6 flex items-center gap-3">
                 <Mic className="w-6 h-6 text-green-600" />
                 Voice & Communication
               </h2>
@@ -348,8 +348,8 @@ const CompanionBuilder = () => {
             </div>
 
             {/* Personalization Settings */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 rounded-2xl shadow-lg p-8 border border-gray-900">
+              <h2 className="text-2xl font-bold text-gray-200 mb-6 flex items-center gap-3">
                 <Heart className="w-6 h-6 text-pink-600" />
                 Personalization
               </h2>
@@ -384,12 +384,12 @@ const CompanionBuilder = () => {
             <PreviewCard data={formData} />
             
             {/* Submit Button */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200rounded-2xl shadow-lg p-6 border border-gray-900">
               <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
+                className={`w-full py-4 px-6 rounded-xl cursor-pointer font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${
                   isSubmitting
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg transform hover:scale-105'

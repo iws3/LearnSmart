@@ -15,13 +15,14 @@ import {
 } from '@/lib/utils'; // Your vapiConfig path
 import CountdownTimerDisplay from '../CountDownTimerDisplay';
 import QuizPromptModal from '../QuizModal';
+import { addToSessionHistory } from '@/lib/actions/aiCompanion.action';
 
 // Import the new components
 // import CountdownTimerDisplay from './CountdownTimerDisplay'; // Adjust path if needed
 // import QuizPromptModal from './QuizPromptModal'; // Adjust path if needed
 
 // Mock function for session history - replace with actual implementation
-const mockAddToSessionHistory = (id: string) => console.log('Added to history:', id);
+// const mockAddToSessionHistory = (id: string) => console.log('Added to history:', id);
 
 enum CallStatus {
   INACTIVE = 'INACTIVE',
@@ -204,8 +205,8 @@ const StatusIndicator = ({ status, totalDurationMinutes }: { status: CallStatus;
         };
       default: // INACTIVE
         return { 
-          color: 'bg-blue-400', text: 'Ready to Start', pulse: false,
-          bgColor: 'bg-gradient-to-r from-blue-50 to-indigo-50', textColor: 'text-blue-800', icon: <Play className="w-4 h-4" />
+          color: 'text-gray-200', text: 'Ready to Start', pulse: false,
+          bgColor: 'bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200', textColor: 'text-gray-200', icon: <Play className="w-4 h-4" />
         };
     }
   };
@@ -281,7 +282,8 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
       setCallStatus(CallStatus.FINISHED);
       setIsAssistantSpeaking(false);
       setAudioLevel(0);
-      mockAddToSessionHistory(id);
+      // implement this new server action 
+      addToSessionHistory(id);
       setShowQuizModal(true); // Show quiz modal when call ends
     };
     const onMessage = (message: any) => {
@@ -423,11 +425,11 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <div className=" to-slate-900 relative overflow-hidden">
       <FloatingElements />
       
       {/* Header */}
-      <div className="relative z-10 bg-white/70 backdrop-blur-xl border-b border-white/30 shadow-lg">
+      <div className="relative z-10 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 backdrop-blur-xl border-b border-white/30 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center space-x-5">
@@ -435,22 +437,22 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
                 <GraduationCap className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 flex items-center gap-3 flex-wrap">
-                  <span>{subject}</span>
-                  <span className="text-blue-500">•</span>
+                <h1 className="text-xl  sm:text-2xl  text-gray-800 flex items-center gap-3 flex-wrap">
+                  <span className='text-gray-300'>{subject}</span>
+                  <span className="text-gray-300">•</span>
                   <span className="text-purple-600">{topic}</span>
                 </h1>
                 <div className="flex items-center space-x-4 mt-2 flex-wrap">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-sm text-gray-200">
                     <ClockIconLucide className="w-4 h-4" /> {/* Used Renamed Clock */}
                     <span>{chat_duration} min session</span>
                   </div>
                   {/* ... other header info ... */}
-                   <div className="flex items-center space-x-2 text-sm text-gray-600">
+                   <div className="flex items-center space-x-2 text-sm text-gray-200">
                     <Globe className="w-4 h-4" />
                     <span>{language}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-sm text-gray-200">
                     <Volume2 className="w-4 h-4" />
                     <span>{voice_type}</span>
                   </div>
@@ -470,12 +472,12 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
         {/* ... Your existing grid for AI Tutor and Student Controls ... */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
            {/* Enhanced AI Tutor Section */}
-          <div className="lg:col-span-2 bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
-            <div className="p-8 sm:p-10 h-full flex flex-col justify-center">
+          <div className="lg:col-span-2 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-900 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
+            <div className="p-8 sm:p-10 h-full flex flex-col justify-center ">
               <div className="text-center">
                 {/* Avatar */}
                 <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto mb-8">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 rounded-full shadow-2xl transform transition-all duration-700 hover:scale-105 hover:rotate-2" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 rounded-full shadow-2xl transform transition-all duration-700 hover:scale-105 hover:rotate-2" />
                   {callStatus === CallStatus.CONNECTING && (<div className="absolute inset-0 flex items-center justify-center"><ConnectionAnimation /></div>)}
                   {(callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED || callStatus === CallStatus.ERROR) && (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -499,27 +501,27 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
                 </div>
                 {/* Tutor Info */}
                 <div className="space-y-4">
-                  <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-gray-100 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent">
                     {name}
                   </h2>
                   {/* ... other tutor details ... */}
                    <div className="flex flex-wrap items-center justify-center gap-3">
-                    <span className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 rounded-full text-sm font-medium border border-blue-200 shadow-sm">
+                    <span className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-br from-slate-800 via-slate-800 to-slate-800 text-gray-200 rounded-full text-sm font-medium border border-gray-900 shadow-sm">
                       <BookOpen className="w-4 h-4" />
                       <span>{subject} Expert</span>
                     </span>
-                    <span className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-purple-200 text-purple-700 rounded-full text-sm font-medium border border-purple-200 shadow-sm">
+                    <span className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-200 rounded-full text-sm font-medium border border-gray-900 shadow-sm">
                       <LearningStyleIcon style={learning_style} />
                       <span className="hidden sm:inline">{learning_style.split(' ')[0]} Focused</span>
                     </span>
                   </div>
-                  <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-gray-600">
-                    <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100/80 rounded-full backdrop-blur-sm">
+                  <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-gray-200">
+                    <div className="flex items-center space-x-2 px-3 py-1 bg-gradient-to-br from-slate-800 via-slate-800 to-slate-800 text-gray-200 rounded-full backdrop-blur-sm">
                       <Volume2 className="w-4 h-4" />
                       <span>{voice_type}</span>
                     </div>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <div className="px-3 py-1 bg-gray-100/80 rounded-full backdrop-blur-sm">
+                    <div className="w-1 h-1 rounded-full"></div>
+                    <div className="px-3 py-1  bg-gradient-to-br from-slate-800 via-slate-800 to-slate-800 text-gray-200` rounded-full backdrop-blur-sm">
                       <span>{speaking_style}</span>
                     </div>
                   </div>
@@ -531,7 +533,7 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
           {/* Student & Controls Section */}
           <div className="space-y-6">
             {/* Student Info Card */}
-            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-8">
+            <div className=" bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-8">
               <div className="text-center">
                 <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-5 rounded-full overflow-hidden border-4 border-gradient-to-br from-blue-200 to-purple-200 shadow-xl">
                   <img 
@@ -540,15 +542,15 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-1">{userName}</h3>
+                <h3 className="text-xl  text-gray-200 mb-1">{userName}</h3>
                 <p className="text-gray-600 text-sm mb-3">Learning Student</p>
-                <div className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 inline-block">
+                <div className="text-xs text-gray-500 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 rounded-full px-3 py-1 inline-block">
                   {learning_style.split(' ')[0]} Learner
                 </div>
               </div>
             </div>
             {/* Control Panel Card */}
-            <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-8">
+            <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30 p-8">
               <div className="space-y-5">
                 {/* Main Call Button */}
                 {callStatus === CallStatus.CONNECTING ? (
@@ -559,7 +561,7 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
                         <span>Connecting to {name}... ({connectionTimer}s)</span>
                       </div>
                     </div>
-                    <button onClick={cancelConnection} className="w-full flex items-center justify-center space-x-3 py-5 px-6 rounded-2xl font-bold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    <button onClick={cancelConnection} className="w-full flex items-center justify-center space-x-3 py-5 px-6 rounded-2xl  text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 cursor-pointer transition-all duration-300 transform hover:scale-105 shadow-xl">
                       <X className="w-5 h-5" />
                       <span>Cancel Connection</span>
                     </button>
@@ -569,7 +571,7 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
                     onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}
                     // @ts-ignore
                     disabled={callStatus === CallStatus.CONNECTING || callStatus === CallStatus.ERROR && !messages.find(m => m.content.includes("Failed to initiate call"))} // Disable if connecting or certain errors
-                    className={`w-full flex items-center justify-center space-x-4 py-5 px-6 rounded-2xl font-bold text-white transition-all duration-300 transform hover:scale-105 shadow-xl ${
+                    className={`w-full flex items-center justify-center space-x-4 py-5 px-6 rounded-2xl  text-white transition-all duration-300 transform hover:scale-105 shadow-xl cursor-pointer ${
                       callStatus === CallStatus.ACTIVE
                         ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
                         : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -580,11 +582,11 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
                 )}
                 {/* Mic and Speaker Controls */}
                 <div className="grid grid-cols-2 gap-4">
-                  <button onClick={toggleMicrophone} disabled={callStatus !== CallStatus.ACTIVE} className={`flex items-center justify-center space-x-2 py-4 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${callStatus !== CallStatus.ACTIVE ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : isMuted ? 'bg-gradient-to-r from-red-100 to-red-200 text-red-600 hover:from-red-200 hover:to-red-300 border-2 border-red-300 shadow-lg' : 'bg-gradient-to-r from-green-100 to-green-200 text-green-600 hover:from-green-200 hover:to-green-300 border-2 border-green-300 shadow-lg'}`}>
+                  <button onClick={toggleMicrophone} disabled={callStatus !== CallStatus.ACTIVE} className={`flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-900 cursor-pointer to-slate-800 text-gray-200 space-x-2 py-4 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${callStatus !== CallStatus.ACTIVE ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : isMuted ? 'bg-gradient-to-r from-red-100 to-red-200 text-red-600 hover:from-red-200 hover:to-red-300 border-2 border-red-300 shadow-lg' : 'bg-gradient-to-r from-green-100 to-green-200 text-green-600 hover:from-green-200 hover:to-green-300 border-2 border-green-300 shadow-lg'}`}>
                     {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
                     <span className="text-sm">{isMuted ? 'Mic Off' : 'Mic On'}</span>
                   </button>
-                  <button onClick={toggleSpeaker} disabled={callStatus !== CallStatus.ACTIVE} className={`flex items-center justify-center space-x-2 py-4 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${callStatus !== CallStatus.ACTIVE ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : isSpeakerOn ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-600 hover:from-green-200 hover:to-green-300 border-2 border-green-300 shadow-lg' : 'bg-gradient-to-r from-red-100 to-red-200 text-red-600 hover:from-red-200 hover:to-red-300 border-2 border-red-300 shadow-lg'}`}>
+                  <button onClick={toggleSpeaker} disabled={callStatus !== CallStatus.ACTIVE} className={`flex items-center bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 justify-center space-x-2 py-4 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${callStatus !== CallStatus.ACTIVE ? 'bg-gray-100 text-gray-200 cursor-not-allowed' : isSpeakerOn ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-600 hover:from-green-200 hover:to-green-300 border-2 border-green-300 shadow-lg' : 'bg-gradient-to-r from-red-100 to-red-200 text-red-600 hover:from-red-200 hover:to-red-300 border-2 border-red-300 shadow-lg'}`}>
                     {isSpeakerOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
                     <span className="text-sm">{isSpeakerOn ? 'Speaker On' : 'Speaker Off'}</span>
                   </button>
@@ -595,7 +597,7 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
         </div>
 
         {/* Transcript Section - PASTE YOUR EXISTING TRANSCRIPT JSX HERE */}
-        <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 overflow-hidden">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 text-gray-200 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-800 overflow-hidden">
           <div className="p-6 sm:p-8 border-b border-gray-200/80">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -603,8 +605,8 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
                   <MessageCircle className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-800">Live Conversation</h3>
-                  <p className="text-sm text-gray-500">Real-time learning transcript</p>
+                  <h3 className="text-xl font-semibold text-gray-200">Live Conversation</h3>
+                  <p className="text-sm text-gray-100">Real-time learning transcript</p>
                 </div>
               </div>
               {messages.length > 0 && (

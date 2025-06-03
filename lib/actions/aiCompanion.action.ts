@@ -61,3 +61,49 @@ export const getCompanion=async(id:string)=>{
     return data[0]
                 
 }
+
+// conversational session history
+// storing our conversation into the session history
+export const addToSessionHistory = async (id:string)=>{
+// start cooking here
+if(!id) {
+    console.log("There is no id, please provide an id")
+}
+const {userId}=await auth();
+const supabase=createSupabaseClient()
+// storing session history of the user using that ai tutor
+const {data, error}=await supabase.from('sesson_history').insert({
+    companion_id:id,
+    user_id:userId
+})
+
+if(error) throw new Error(error.message)
+// if no error we want to return the data
+return data;
+
+
+}
+
+// now fetch the session added to the  history
+export const getRecentSessions=async (limit=10)=>{
+    const supabase=createSupabaseClient()
+    // it will be descending from newest to oldest
+    const {data, error}=await supabase.from('sesson_history').select(`companions:companion_id(*)`).order('created_at', {ascending:false}).limit(limit)
+    if(error)  throw new Error(error.message || "error occured while trying to get session_history")
+
+    return data.map(({companions})=>companions)
+}
+
+
+// get user (or current user session)
+
+export const getUserSessions=async (userId:string, limit=10)=>{
+    const supabase=createSupabaseClient()
+    // it will be descending from newest to oldest
+    const {data, error}=await supabase.from('sesson_history').select(`companions:companion_id(*)`)
+    .eq('user_id', userId)
+    .order('created_at', {ascending:false}).limit(limit)
+    if(error)  throw new Error(error.message || "error occured while trying to get session_history")
+
+    return data.map(({companions})=>companions)
+}

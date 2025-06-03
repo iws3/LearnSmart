@@ -224,3 +224,72 @@ body {
     scrollbar-width: none;
   }
 }
+
+
+.clerk-signin-wrapper{
+  color:#fff;
+}
+.clerk-signin-wrapper .cl-socialButtonsBlockButton{
+            background-color: #fccc41;
+            padding: 12px;
+          
+
+
+}
+
+.clerk-signin-wrapper .cl-socialButtonsBlockButton:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+          }
+          .clerk-signin-wrapper .cl-formButtonPrimary{
+            padding: 14px;
+            background-color: #fccc41;
+          }
+          
+          .clerk-signin-wrapper .cl-formButtonPrimary:hover {
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+          }
+          
+          .clerk-signin-wrapper .cl-card {
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+          }
+          
+          .clerk-signin-wrapper .cl-internal-b3fm6y {
+            background: transparent !important;
+          }
+          
+          .clerk-signin-wrapper .cl-formFieldInput{
+            padding: 14px;
+            background-color: transparent;
+            
+          }
+          .clerk-signin-wrapper .cl-formFieldInput:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+          }
+          
+          .clerk-signin-wrapper .cl-otpCodeFieldInput:focus {
+            box-shadow: 0 0 0 3px #fccc41;
+          }
+          
+          /* Mobile optimizations */
+          @media (max-width: 768px) {
+           .clerk-signin-wrapper{
+  padding-right: 300px;
+}
+
+            .clerk-signin-wrapper {
+              width: 100%;
+              
+            }
+            
+            .clerk-signin-wrapper .cl-card {
+              width: 100% !important;
+              max-width: none !important;
+            }
+            
+            .clerk-signin-wrapper .cl-rootBox {
+              width: 100% !important;
+            }
+          }

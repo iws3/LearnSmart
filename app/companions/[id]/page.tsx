@@ -6,6 +6,7 @@ import React from 'react';
 // import ActualClassroomComponent from '../ActualClassroom'; // Adjust path
 import { CompanionComponentProps, VoiceTypeKey, SpeakingStyleKey } from '@/types'; // Adjust path to your types
 import ActualClassroom from '@/components/form/ActualClassroom';
+// import ActualClassroom from '@/components/form/ActualClassroom';
 
 interface CompanionSessionPageProps {
     params: { id: string };

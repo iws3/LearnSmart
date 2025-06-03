@@ -17,11 +17,11 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode; 
 }>) {
   return (
     <html lang="en">
-      <body className={`${bricolage.variable} antialiased`}>
+      <body className={`${bricolage.variable} bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900`}>
         <ClerkProvider
         appearance={{
           variables:{colorPrimary:"#fe5933"}

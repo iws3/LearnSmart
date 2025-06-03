@@ -203,7 +203,7 @@ const CompanionBuilder = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -211,28 +211,28 @@ const CompanionBuilder = () => {
             <Sparkles className="w-5 h-5" />
             <span className="font-medium">AI Companion Builder</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-200 mb-4">
             Create Your Perfect
             <span className="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               Personalize Tutor
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl  max-w-2xl mx-auto text-white/100">
             Design an AI tutor that matches your learning style and teaching preferences
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Form */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-8 ">
             {/* Basic Information */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <div className="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-900 rounded-2xl shadow-lg p-8 border border-gray-600">
+              <h2 className="text-2xl font-bold text-gray-300 mb-6 flex items-center gap-3">
                 <User className="w-6 h-6 text-blue-600" />
                 Basic Information
               </h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
                 <div className="md:col-span-1">
                   <FileUpload
                     onFileSelect={handleFileSelect}
@@ -241,7 +241,7 @@ const CompanionBuilder = () => {
                   />
                 </div>
                 
-                <div className="space-y-6">
+                <div className="space-y-6 ">
                   <FormInput
                     label="Companion Name"
                     value={formData.name}

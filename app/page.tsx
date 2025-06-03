@@ -1,6 +1,5 @@
 "use client"
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import { 
   Play, 
   Clock, 
@@ -20,7 +19,23 @@ import {
   Search,
   Heart,
   Share2,
-  Bookmark
+  Bookmark,
+  ArrowRight,
+  Code,
+  Palette,
+  Rocket,
+  Trophy,
+  Globe,
+  Shield,
+  Lightbulb,
+  ChevronDown,
+  Plus,
+  Activity,
+  BarChart3,
+  Calendar,
+  MessageSquare,
+  FileText,
+  Headphones
 } from 'lucide-react';
 
 // Types
@@ -31,252 +46,178 @@ interface Lesson {
   duration: string;
   aiTutor: string;
   tutorAvatar: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels'; // Added 'All Levels'
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
   rating: number;
   students: number;
   category: string;
   thumbnail: string;
   isPopular?: boolean;
   isNew?: boolean;
-  subject?: 'Chemistry' | 'Physics' | 'Biology' | 'Economics' | 'Geography' | 'Maths' | 'Computer Science' | 'Web Development' | 'Artificial Intelligence' | 'Frontend Development' | 'MLOps' | 'Mobile Development'; // Added subject field
-  lessonType?: 'Theory' | 'Practical'; // Added lessonType field
+  subject?: string;
+  lessonType?: 'Theory' | 'Practical';
+  progress?: number;
 }
 
-const theoryLessons: Lesson[] = [
+const featuredLessons: Lesson[] = [
   {
     id: '1',
-    title: 'Introduction to Machine Learning',
-    description: 'Learn the fundamentals of ML algorithms, data preprocessing, and model evaluation techniques.',
-    duration: '2h 30m',
-    aiTutor: 'Dr. Sarah AI',
-    tutorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b2942e?w=100&h=100&fit=crop&crop=face', // Different Unsplash image
-    difficulty: 'Beginner',
-    rating: 4.8,
-    students: 1240,
-    category: 'Artificial Intelligence',
-    thumbnail: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop',
+    title: 'Advanced Neural Networks',
+    description: 'Master deep learning architectures, backpropagation, and cutting-edge AI techniques.',
+    duration: '4h 30m',
+    aiTutor: 'Dr. Neural AI',
+    tutorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b2942e?w=100&h=100&fit=crop&crop=face',
+    difficulty: 'Advanced',
+    rating: 4.9,
+    students: 2450,
+    category: 'AI & Machine Learning',
+    thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop',
     isPopular: true,
     subject: 'Artificial Intelligence',
     lessonType: 'Theory',
+    progress: 65
   },
   {
     id: '2',
-    title: 'Advanced JavaScript Concepts',
-    description: 'Deep dive into closures, prototypes, async programming, and modern ES6+ features.',
-    duration: '3h 15m',
-    aiTutor: 'Prof. Alex Code',
+    title: 'React Native Mobile Mastery',
+    description: 'Build production-ready mobile apps with modern React Native and Expo.',
+    duration: '6h 15m',
+    aiTutor: 'Mobile Mentor',
     tutorAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Advanced',
-    rating: 4.9,
-    students: 892,
-    category: 'Web Development',
-    thumbnail: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&h=250&fit=crop',
+    difficulty: 'Intermediate',
+    rating: 4.8,
+    students: 1890,
+    category: 'Mobile Development',
+    thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=400&fit=crop',
     isNew: true,
-    subject: 'Web Development',
-    lessonType: 'Theory',
+    subject: 'Mobile Development',
+    lessonType: 'Practical',
+    progress: 30
   },
   {
     id: '3',
-    title: 'Data Structures & Algorithms',
-    description: 'Master essential data structures and algorithmic thinking for coding interviews.',
-    duration: '4h 20m',
-    aiTutor: 'Dr. Logic Prime',
+    title: 'Quantum Computing Fundamentals',
+    description: 'Explore quantum mechanics principles and their applications in computing.',
+    duration: '3h 45m',
+    aiTutor: 'Quantum Sage',
     tutorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Intermediate',
+    difficulty: 'Advanced',
     rating: 4.7,
-    students: 2156,
-    category: 'Computer Science',
-    thumbnail: 'https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=400&h=250&fit=crop',
+    students: 1250,
+    category: 'Quantum Computing',
+    thumbnail: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop',
+    isPopular: true,
     subject: 'Computer Science',
     lessonType: 'Theory',
-  },
-  // --- New High School Theory Lessons ---
-  {
-    id: '7',
-    title: 'Fundamentals of Algebra',
-    description: 'Explore variables, equations, inequalities, and functions. Build a strong foundation in algebraic thinking.',
-    duration: '1h 45m',
-    aiTutor: 'Prof. Mathemagica',
-    tutorAvatar: 'https://images.unsplash.com/photo-1557862921-37829c790f19?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Beginner',
-    rating: 4.6,
-    students: 1850,
-    category: 'High School Maths',
-    thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&h=250&fit=crop',
-    isPopular: true,
-    subject: 'Maths',
-    lessonType: 'Theory',
-  },
-  {
-    id: '8',
-    title: 'Introduction to Economics: Supply & Demand',
-    description: 'Understand the core principles of microeconomics, market forces, and how prices are determined.',
-    duration: '2h 00m',
-    aiTutor: 'Dr. Eco Novice',
-    tutorAvatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Beginner',
-    rating: 4.7,
-    students: 1320,
-    category: 'High School Economics',
-    thumbnail: 'https://images.unsplash.com/photo-1600880292203-757bb62b4be3?w=400&h=250&fit=crop',
-    subject: 'Economics',
-    lessonType: 'Theory',
-  },
-  {
-    id: '9',
-    title: 'World Geography: Continents and Climates',
-    description: 'Explore the Earth\'s major landforms, diverse climates, and their impact on human societies.',
-    duration: '1h 30m',
-    aiTutor: 'Explorer GeoBot',
-    tutorAvatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'All Levels',
-    rating: 4.5,
-    students: 980,
-    category: 'High School Geography',
-    thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=250&fit=crop',
-    isNew: true,
-    subject: 'Geography',
-    lessonType: 'Theory',
-  },
+    progress: 0
+  }
 ];
 
-const practicalLessons: Lesson[] = [
-  {
-    id: '4',
-    title: 'Build a React Dashboard',
-    description: 'Create a fully functional admin dashboard with charts, tables, and real-time data.',
-    duration: '5h 45m',
-    aiTutor: 'React Master AI',
-    tutorAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Intermediate',
-    rating: 4.6,
-    students: 758,
-    category: 'Frontend Development',
-    thumbnail: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=250&fit=crop',
-    isPopular: true,
-    subject: 'Frontend Development',
-    lessonType: 'Practical',
+const categories = [
+  { 
+    name: 'AI & Machine Learning', 
+    icon: Brain, 
+    courses: 42, 
+    color: 'from-blue-500 to-cyan-400',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-blue-500/20'
   },
-  {
-    id: '5',
-    title: 'ML Model Deployment Lab',
-    description: 'Deploy machine learning models to production using Docker, AWS, and FastAPI.',
-    duration: '6h 30m',
-    aiTutor: 'DevOps Guru AI',
-    tutorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Advanced',
-    rating: 4.9,
-    students: 543,
-    category: 'MLOps',
-    thumbnail: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=400&h=250&fit=crop',
-    isNew: true,
-    subject: 'MLOps',
-    lessonType: 'Practical',
+  { 
+    name: 'Web Development', 
+    icon: Code, 
+    courses: 38, 
+    color: 'from-purple-500 to-pink-400',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-purple-500/20'
   },
-  {
-    id: '6',
-    title: 'Mobile App with React Native',
-    description: 'Build and publish a cross-platform mobile app with navigation and API integration.',
-    duration: '7h 15m',
-    aiTutor: 'Mobile Mentor AI',
-    tutorAvatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Intermediate',
-    rating: 4.8,
-    students: 1089,
-    category: 'Mobile Development',
-    thumbnail: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=250&fit=crop',
-    subject: 'Mobile Development',
-    lessonType: 'Practical',
+  { 
+    name: 'Data Science', 
+    icon: BarChart3, 
+    courses: 29, 
+    color: 'from-green-500 to-emerald-400',
+    bgColor: 'bg-green-500/10',
+    borderColor: 'border-green-500/20'
   },
-  // --- New High School Practical Lessons ---
-  {
-    id: '10',
-    title: 'Chemistry Lab: Acid-Base Titration',
-    description: 'Perform a classic titration experiment to determine the concentration of an unknown acid or base. Learn lab safety and precision techniques.',
-    duration: '2h 15m',
-    aiTutor: 'Dr. Beaker Bot',
-    tutorAvatar: 'https://images.unsplash.com/photo-1532074205216-d0e1f4b87368?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Intermediate',
-    rating: 4.8,
-    students: 750,
-    category: 'High School Chemistry',
-    thumbnail: 'https://images.unsplash.com/photo-1576091999482-8c3507109587?w=400&h=250&fit=crop', // Chemistry lab image
-    isPopular: true,
-    subject: 'Chemistry',
-    lessonType: 'Practical',
+  { 
+    name: 'Design & UI/UX', 
+    icon: Palette, 
+    courses: 25, 
+    color: 'from-orange-500 to-red-400',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500/20'
   },
-  {
-    id: '11',
-    title: 'Physics Lab: Ohm\'s Law Experiment',
-    description: 'Investigate the relationship between voltage, current, and resistance by building simple circuits and taking measurements.',
-    duration: '2h 00m',
-    aiTutor: 'Circuit Sage AI',
-    tutorAvatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Intermediate',
-    rating: 4.7,
-    students: 680,
-    category: 'High School Physics',
-    thumbnail: 'https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=400&h=250&fit=crop', // Physics experiment image
-    subject: 'Physics',
-    lessonType: 'Practical',
+  { 
+    name: 'Mobile Development', 
+    icon: Rocket, 
+    courses: 31, 
+    color: 'from-indigo-500 to-purple-400',
+    bgColor: 'bg-indigo-500/10',
+    borderColor: 'border-indigo-500/20'
   },
-  {
-    id: '12',
-    title: 'Biology Lab: Microscopic World',
-    description: 'Learn to use a microscope, prepare slides, and observe various microorganisms and cell structures.',
-    duration: '1h 45m',
-    aiTutor: 'Microbe Mentor',
-    tutorAvatar: 'https://images.unsplash.com/photo-1612279210995-55c0aea5f86e?w=100&h=100&fit=crop&crop=face',
-    difficulty: 'Beginner',
-    rating: 4.9,
-    students: 920,
-    category: 'High School Biology',
-    thumbnail: 'https://images.unsplash.com/photo-1578496479531-329f64bf3906?w=400&h=250&fit=crop', // Microscope/biology image
-    isNew: true,
-    subject: 'Biology',
-    lessonType: 'Practical',
-  },
+  { 
+    name: 'Cybersecurity', 
+    icon: Shield, 
+    courses: 18, 
+    color: 'from-red-500 to-pink-400',
+    bgColor: 'bg-red-500/10',
+    borderColor: 'border-red-500/20'
+  }
+];
+
+const stats = [
+  { label: 'Active Learners', value: '50K+', icon: Users, change: '+12%' },
+  { label: 'Expert Tutors', value: '200+', icon: Award, change: '+8%' },
+  { label: 'Course Hours', value: '1000+', icon: Clock, change: '+25%' },
+  { label: 'Success Rate', value: '94%', icon: Trophy, change: '+3%' }
 ];
 
 // Components
-const DifficultyBadge = ({ difficulty }: { difficulty: string }) => {
-  const colors = {
-    Beginner: 'bg-green-100 text-green-700 border-green-200',
-    Intermediate: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    Advanced: 'bg-red-100 text-red-700 border-red-200',
-  };
-  
-  return (
-    <span className={`px-2 py-1 text-xs font-medium rounded-full border ${colors[difficulty as keyof typeof colors]}`}>
-      {difficulty}
-    </span>
-  );
-};
+const FloatingOrbs = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+    <div className="absolute top-40 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+    <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-2000" />
+  </div>
+);
 
-const LessonCard = ({ lesson, type }: { lesson: Lesson; type: 'theory' | 'practical' }) => {
+const LessonCard = ({ lesson, size = 'normal' }: { lesson: Lesson; size?: 'normal' | 'large' }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   return (
-    <div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 overflow-hidden">
-      {/* Card Header with Image */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600">
+    <div className={`group relative bg-slate-800/50 backdrop-blur-sm rounded-3xl border border-slate-700/50 overflow-hidden hover:bg-slate-800/70 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 ${
+      size === 'large' ? 'md:col-span-2 md:row-span-2' : ''
+    }`}>
+      {/* Progress Bar */}
+      {lesson.progress !== undefined && lesson.progress > 0 && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-slate-700/50">
+          <div 
+            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000"
+            style={{ width: `${lesson.progress}%` }}
+          />
+        </div>
+      )}
+
+      {/* Image Container */}
+      <div className={`relative overflow-hidden ${size === 'large' ? 'h-64' : 'h-48'}`}>
         <img 
           src={lesson.thumbnail} 
           alt={lesson.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
         
-        {/* Overlay Badges */}
-        <div className="absolute top-3 left-3 flex gap-2">
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent" />
+        
+        {/* Badges */}
+        <div className="absolute top-4 left-4 flex gap-2">
           {lesson.isPopular && (
-            <span className="bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+            <span className="bg-orange-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               Popular
             </span>
           )}
           {lesson.isNew && (
-            <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+            <span className="bg-green-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
               New
             </span>
@@ -284,64 +225,89 @@ const LessonCard = ({ lesson, type }: { lesson: Lesson; type: 'theory' | 'practi
         </div>
 
         {/* Action Buttons */}
-        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
           <button 
             onClick={() => setIsLiked(!isLiked)}
-            className={`p-2 rounded-full backdrop-blur-sm transition-colors ${
-              isLiked ? 'bg-red-500 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+            className={`p-2 rounded-full backdrop-blur-sm transition-all ${
+              isLiked 
+                ? 'bg-red-500 text-white scale-110' 
+                : 'bg-slate-900/50 text-white hover:bg-slate-800/70 hover:scale-110'
             }`}
           >
             <Heart className="w-4 h-4" />
           </button>
           <button 
             onClick={() => setIsBookmarked(!isBookmarked)}
-            className={`p-2 rounded-full backdrop-blur-sm transition-colors ${
-              isBookmarked ? 'bg-blue-500 text-white' : 'bg-white/20 text-white hover:bg-white/30'
+            className={`p-2 rounded-full backdrop-blur-sm transition-all ${
+              isBookmarked 
+                ? 'bg-blue-500 text-white scale-110' 
+                : 'bg-slate-900/50 text-white hover:bg-slate-800/70 hover:scale-110'
             }`}
           >
             <Bookmark className="w-4 h-4" />
           </button>
-          <button className="p-2 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors">
-            <Share2 className="w-4 h-4" />
-          </button>
         </div>
 
-        {/* Type Icon */}
-        <div className="absolute bottom-3 left-3">
-          <div className={`p-2 rounded-full backdrop-blur-sm ${
-            type === 'theory' ? 'bg-blue-500/80' : 'bg-purple-500/80'
-          } text-white`}>
-            {type === 'theory' ? <BookOpen className="w-5 h-5" /> : <FlaskConical className="w-5 h-5" />}
-          </div>
+        {/* Play Button Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <button className="bg-white/20 backdrop-blur-sm border border-white/30 text-white p-4 rounded-full hover:bg-white/30 transition-all duration-300 hover:scale-110">
+            <Play className="w-8 h-8" />
+          </button>
         </div>
       </div>
 
-      {/* Card Content */}
-      <div className="p-6">
+      {/* Content */}
+      <div className={`p-6 ${size === 'large' ? 'md:p-8' : ''}`}>
         {/* Category & Difficulty */}
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+          <span className="text-xs font-semibold text-blue-400 uppercase tracking-wide">
             {lesson.category}
           </span>
-          <DifficultyBadge difficulty={lesson.difficulty} />
+          <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+            lesson.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-300 border border-green-500/30' :
+            lesson.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
+            'bg-red-500/20 text-red-300 border border-red-500/30'
+          }`}>
+            {lesson.difficulty}
+          </span>
         </div>
 
         {/* Title & Description */}
-        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className={`font-bold text-white mb-3 group-hover:text-blue-300 transition-colors line-clamp-2 ${
+          size === 'large' ? 'text-2xl md:text-3xl' : 'text-xl'
+        }`}>
           {lesson.title}
         </h3>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+        <p className={`text-slate-400 leading-relaxed mb-4 line-clamp-3 ${
+          size === 'large' ? 'text-base' : 'text-sm'
+        }`}>
           {lesson.description}
         </p>
 
-        {/* Stats Row */}
-        <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
+        {/* Progress Bar (if in progress) */}
+        {lesson.progress !== undefined && lesson.progress > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400">Progress</span>
+              <span className="text-xs text-blue-400 font-medium">{lesson.progress}%</span>
+            </div>
+            <div className="w-full bg-slate-700/50 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
+                style={{ width: `${lesson.progress}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Stats */}
+        <div className="flex items-center gap-4 mb-4 text-sm text-slate-400">
           <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
             <span>{lesson.duration}</span>
           </div>
           <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+            <Star className="w-4 h-4 text-yellow-400 fill-current" />
             <span className="font-medium">{lesson.rating}</span>
           </div>
           <div className="flex items-center gap-1">
@@ -350,223 +316,273 @@ const LessonCard = ({ lesson, type }: { lesson: Lesson; type: 'theory' | 'practi
           </div>
         </div>
 
-        {/* Tutor Info */}
+        {/* Tutor & Action */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
               src={lesson.tutorAvatar} 
               alt={lesson.aiTutor}
-              className="w-8 h-8 rounded-full object-cover ring-2 ring-blue-100"
+              className="w-10 h-10 rounded-full object-cover ring-2 ring-blue-500/30"
             />
             <div>
-              <p className="text-sm font-medium text-gray-900">{lesson.aiTutor}</p>
-              <p className="text-xs text-gray-500">AI Tutor</p>
+              <p className="text-sm font-medium text-white">{lesson.aiTutor}</p>
+              <p className="text-xs text-slate-400">AI Tutor</p>
             </div>
           </div>
 
-          {/* Launch Button */}
-          <Link 
-            href={`/lesson/${lesson.id}`}
-            className="group/btn inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-xl font-medium text-sm hover:shadow-lg transform hover:scale-105 transition-all duration-300"
-          >
-            <Play className="w-4 h-4" />
-            <span>Launch</span>
+          <button className="group/btn bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-3 rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
+            {lesson.progress && lesson.progress > 0 ? (
+              <>
+                <Play className="w-4 h-4" />
+                Continue
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4" />
+                Start
+              </>
+            )}
             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-          </Link>
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-const SectionHeader = ({ 
-  icon: Icon, 
-  title, 
-  subtitle, 
-  count,
-  gradient 
-}: { 
-  icon: any;
-  title: string;
-  subtitle: string;
-  count: number;
-  gradient: string;
-}) => (
-  <div className="text-center mb-12">
-    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl ${gradient} mb-4`}>
-      <Icon className="w-8 h-8 text-white" />
+const CategoryCard = ({ category }: { category: any }) => (
+  <div className="group relative bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10">
+    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-r ${category.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+      <category.icon className="w-8 h-8 text-white" />
     </div>
-    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{title}</h2>
-    <p className="text-gray-600 mb-4">{subtitle}</p>
-    <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 text-sm font-medium text-gray-700">
-      <Target className="w-4 h-4" />
-      <span>{count} lessons available</span>
-    </div>
+    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
+      {category.name}
+    </h3>
+    <p className="text-slate-400 text-sm mb-4">
+      {category.courses} courses available
+    </p>
+    <button className="flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium text-sm group-hover:gap-3 transition-all">
+      Explore <ArrowRight className="w-4 h-4" />
+    </button>
   </div>
 );
 
-const StatsCard = ({ icon: Icon, label, value, change }: { 
-  icon: any;
-  label: string;
-  value: string;
-  change: string;
-}) => (
-  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+const StatCard = ({ stat }: { stat: any }) => (
+  <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:bg-slate-800/50 transition-all duration-300 group">
     <div className="flex items-center justify-between mb-4">
-      <div className="p-3 bg-blue-100 rounded-xl">
-        <Icon className="w-6 h-6 text-blue-600" />
+      <div className="p-3 bg-blue-500/20 rounded-xl group-hover:bg-blue-500/30 transition-colors">
+        <stat.icon className="w-6 h-6 text-blue-400" />
       </div>
-      <span className="text-sm font-medium text-green-600">{change}</span>
+      <span className="text-sm font-medium text-green-400">{stat.change}</span>
     </div>
-    <h3 className="text-2xl font-bold text-gray-900 mb-1">{value}</h3>
-    <p className="text-gray-600 text-sm">{label}</p>
+    <h3 className="text-3xl font-bold text-white mb-1">{stat.value}</h3>
+    <p className="text-slate-400 text-sm">{stat.label}</p>
   </div>
 );
 
 const page = () => {
-  const [activeTab, setActiveTab] = useState<'theory' | 'practical'>('theory');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const getGreeting = () => {
+    const hour = currentTime.getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <FloatingOrbs />
+      
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 pt-8 pb-20">
-   
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Welcome Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-              <span className="text-white font-medium">Welcome back, John!</span>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Animated Background Grid */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px'
+          }} />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Welcome Badge */}
+          <div className="inline-flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full px-6 py-3 mb-8">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <span className="text-slate-300 font-medium">{getGreeting()}, Alex!</span>
+            <Sparkles className="w-4 h-4 text-yellow-400" />
+          </div>
+
+          {/* Main Heading */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
+            <span className="text-white">Master the</span>
+            <br />
+            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent animate-pulse">
+              Future of Tech
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
+            Transform your career with AI-powered learning. From beginner to expert, 
+            <span className="text-blue-400"> master cutting-edge technologies</span> with 
+            personalized AI tutors and hands-on projects.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 px-3">
+            <button className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-8  py-4 rounded-2xl text-lg hover:shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer">
+              <Play className="w-6 h-6" />
+              Start Learning Now
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button className="group bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800/70 transition-all duration-300 flex items-center justify-center gap-3">
+              <Headphones className="w-6 h-6" />
+              Watch Demo
+            </button>
+          </div>
+
+          {/* Enhanced Search Bar */}
+          <div className="max-w-2xl mx-auto relative mb-16">
+            <div className="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-2 hover:bg-slate-800/70 transition-all duration-300">
+              <div className="flex items-center">
+                <Search className="w-6 h-6 text-slate-400 ml-4" />
+                <input
+                  type="text"
+                  placeholder="What would you like to learn today?"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 bg-transparent text-white placeholder-slate-400 px-4 py-4 focus:outline-none text-lg"
+                />
+                <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  Ask AI
+                </button>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-              Your Learning
-              <span className="block bg-gradient-to-r from-yellow-400 to-pink-400 bg-clip-text text-transparent">
-                Journey Continues
-              </span>
-            </h1>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-8">
-              Discover new lessons, practice with hands-on labs, and master skills with AI-powered tutors
-            </p>
+            
+            {/* Popular Searches */}
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
+              {['Machine Learning', 'React', 'Python', 'Data Science', 'UI/UX'].map((term) => (
+                <button
+                  key={term}
+                  className="px-4 py-2 bg-slate-800/30 border border-slate-700/50 text-slate-300 rounded-full text-sm hover:bg-slate-700/50 hover:text-white transition-all duration-300"
+                >
+                  {term}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <StatsCard icon={BookOpen} label="Courses Completed" value="12" change="+2 this week" />
-            <StatsCard icon={Clock} label="Hours Learned" value="48" change="+6 this week" />
-            <StatsCard icon={Award} label="Certificates" value="8" change="+1 this week" />
-            <StatsCard icon={TrendingUp} label="Skill Level" value="Expert" change="↗ Growing" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {stats.map((stat, index) => (
+              <StatCard key={index} stat={stat} />
+            ))}
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-slate-400 animate-bounce">
+          <ChevronDown className="w-6 h-6" />
+        </div>
+      </section>
+
+      {/* Featured Lessons */}
+      <section className="relative py-20 bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full px-4 py-2 mb-6">
+              <Star className="w-5 h-5 text-yellow-400" />
+              <span className="text-slate-300 font-medium">Featured Content</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Continue Your <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Journey</span>
+            </h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+              Pick up where you left off or discover something completely new
+            </p>
           </div>
 
-          {/* Search & Filter Bar */}
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search lessons, topics, or tutors..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-2xl border-0 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-lg"
+          {/* Lessons Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {featuredLessons.map((lesson, index) => (
+              <LessonCard 
+                key={lesson.id} 
+                lesson={lesson} 
+                size={index === 0 ? 'large' : 'normal'} 
               />
-            </div>
-            <button className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-2xl hover:bg-white/20 transition-colors">
-              <Filter className="w-5 h-5" />
-              <span>Filters</span>
+            ))}
+          </div>
+
+          {/* View All Button */}
+          <div className="text-center">
+            <button className="group bg-gradient-to-r from-slate-800 to-slate-700 border border-slate-600/50 text-white px-8 py-4 rounded-2xl font-medium text-lg hover:bg-gradient-to-r hover:from-slate-700 hover:to-slate-600 transition-all duration-300 flex items-center gap-3 mx-auto">
+              View All Courses
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
       </section>
 
-      {/* Learning Path Toggle */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
-        <div className="bg-white rounded-3xl shadow-2xl p-2 md:inline-flex flex-col md:flex mx-auto block border border-gray-200">
-          <button
-            onClick={() => setActiveTab('theory')}
-            className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 ${
-              activeTab === 'theory'
-                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg transform scale-105'
-                : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-            }`}
-          >
-            <BookOpen className="w-5 h-5" />
-            <span>Theory Lessons</span>
-            <span className="bg-white/20 text-xs px-2 py-1 rounded-full">
-              {theoryLessons.length}
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('practical')}
-            className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 ${
-              activeTab === 'practical'
-                ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg transform scale-105'
-                : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50'
-            }`}
-          >
-            <FlaskConical className="w-5 h-5" />
-            <span>Practical Labs</span>
-            <span className="bg-white/20 text-xs px-2 py-1 rounded-full">
-              {practicalLessons.length}
-            </span>
-          </button>
+      {/* Categories */}
+      <section className="relative py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full px-4 py-2 mb-6">
+              <Target className="w-5 h-5 text-blue-400" />
+              <span className="text-slate-300 font-medium">Learning Paths</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Explore by <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Category</span>
+            </h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+              Choose your path and let AI guide you to mastery
+            </p>
+          </div>
+
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {categories.map((category, index) => (
+              <CategoryCard key={index} category={category} />
+            ))}
+          </div>
         </div>
       </section>
-
-      {/* Theory Section */}
-      {activeTab === 'theory' && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <SectionHeader
-            icon={BookOpen}
-            title="Theory Lessons"
-            subtitle="Build strong foundations with comprehensive theoretical knowledge"
-            count={theoryLessons.length}
-            gradient="bg-gradient-to-r from-blue-600 to-blue-500"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {theoryLessons.map((lesson) => (
-              <LessonCard key={lesson.id} lesson={lesson} type="theory" />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Practical Section */}
-      {activeTab === 'practical' && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <SectionHeader
-            icon={FlaskConical}
-            title="Practical Labs"
-            subtitle="Apply your knowledge with hands-on projects and real-world applications"
-            count={practicalLessons.length}
-            gradient="bg-gradient-to-r from-purple-600 to-purple-500"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {practicalLessons.map((lesson) => (
-              <LessonCard key={lesson.id} lesson={lesson} type="practical" />
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 py-20">
+      <section className="relative py-20 bg-gradient-to-r from-blue-900/50 via-purple-900/50 to-blue-900/50 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <Brain className="w-16 h-16 text-white mx-auto mb-6" />
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Level Up Your Skills?
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl mb-8">
+            <Rocket className="w-10 h-10 text-white" />
+          </div>
+          
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Ready to Transform Your Future?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Join thousands of learners mastering new technologies with AI-powered education
+          <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
+            Join over 50,000 learners who are already mastering tomorrow's technologies with AI-powered education
           </p>
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
-              Explore All Courses
-            </button>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-colors">
+            <button className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-8 py-4 rounded-2xl text-lg hover:shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
+              <Plus className="w-6 h-6" />
               Get Premium Access
+              <Sparkles className="w-5 h-5" />
+            </button>
+            <button className="group bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-white px-8 py-4 rounded-2xl  text-lg hover:bg-slate-800/70 transition-all duration-300 flex items-center justify-center gap-3">
+              <MessageSquare className="w-6 h-6" />
+              Talk to AI Advisor
             </button>
           </div>
         </div>
@@ -575,4 +591,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default page

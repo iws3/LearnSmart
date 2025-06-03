@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SignInButton, SignOutButton, SignedIn,SignedOut, UserButton } from '@clerk/nextjs';
+import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { 
   Brain, 
   Users, 
@@ -14,14 +14,23 @@ import {
   Bell,
   Search,
   Sparkles,
-  AtSignIcon,
+  AtSign,
   DollarSign,
-  CreativeCommons
+  Plus,
+  Home,
+  BookOpen,
+  Trophy,
+  Settings,
+  Zap,
+  Star,
+  Rocket,
+  Heart
 } from 'lucide-react';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeTab, setActiveTab] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,254 +41,433 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'Ai Tutors', icon: Users, href: '/companions' },
-    { name: 'My Journey', icon: Map, href: '/journey'},{name:"Billing", icon:DollarSign, href:"/billing" },
-    {name:"create", icon:CreativeCommons, href:'/companions/new'}
+    { name: 'AI Tutors', icon: Brain, href: '/companions', gradient: 'from-blue-500 to-cyan-400' },
+    { name: 'My Journey', icon: Map, href: '/journey', gradient: 'from-purple-500 to-pink-400' },
+    { name: 'Billing', icon: DollarSign, href: '/billing', gradient: 'from-green-500 to-emerald-400' },
+    { name: 'Create', icon: Plus, href: '/companions/new', gradient: 'from-orange-500 to-red-400' }
+  ];
+
+  const mobileTabItems = [
+    { name: 'Home', icon: Home, id: 'home', href: '/', color: 'text-blue-400' },
+    { name: 'Learn', icon: BookOpen, id: 'learn', href: '/companions', color: 'text-purple-400' },
+    { name: 'Progress', icon: Trophy, id: 'progress', href: '/journey', color: 'text-orange-400' },
+    { name: 'Profile', icon: User, id: 'profile', href: '/profile', color: 'text-pink-400' }
   ];
 
   return (
     <>
-      {/* Global CSS Styles */}
+      {/* Enhanced Global Styles */}
       <style jsx global>{`
-        .navbar-glass {
-          backdrop-filter: blur(20px);
-          background: rgba(255, 255, 255, 0.85);
-          border: 1px solid rgba(147, 197, 253, 0.2);
+        * {
+          scrollbar-width: thin;
+          scrollbar-color: #6366f1 #1e1b4b;
         }
         
-        .navbar-shadow {
-          box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+        *::-webkit-scrollbar {
+          width: 6px;
         }
         
-        .nav-item-hover {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        *::-webkit-scrollbar-track {
+          background: #1e1b4b;
         }
         
-        .nav-item-hover:hover {
-          background: linear-gradient(135deg, rgba(147, 197, 253, 0.1), rgba(191, 219, 254, 0.15));
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        *::-webkit-scrollbar-thumb {
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          border-radius: 3px;
+        }
+
+        .navbar-dark {
+          background: linear-gradient(135deg, 
+            rgba(15, 23, 42, 0.95) 0%, 
+            rgba(30, 27, 75, 0.98) 50%, 
+            rgba(15, 23, 42, 0.95) 100%);
+          backdrop-filter: blur(24px) saturate(180%);
+          border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                      0 0 0 1px rgba(99, 102, 241, 0.1);
         }
         
-        .logo-glow {
-          filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
+        .navbar-scrolled {
+          background: linear-gradient(135deg, 
+            rgba(15, 23, 42, 0.98) 0%, 
+            rgba(30, 27, 75, 0.99) 50%, 
+            rgba(15, 23, 42, 0.98) 100%);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                      0 0 0 1px rgba(99, 102, 241, 0.15),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
         
-        .mobile-menu-slide {
-          transform: translateX(100%);
-          transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        .nav-item-modern {
+          position: relative;
+          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          overflow: hidden;
         }
         
-        .mobile-menu-slide.open {
-          transform: translateX(0);
+        .nav-item-modern::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+          transition: left 0.6s ease;
         }
         
-        .notification-pulse {
-          animation: pulse 2s infinite;
+        .nav-item-modern:hover::before {
+          left: 100%;
         }
         
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.7; }
+        .nav-item-modern:hover {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 20px 40px rgba(99, 102, 241, 0.25);
         }
         
-        .profile-ring {
-          background: linear-gradient(135deg, #3b82f6, #60a5fa);
-          padding: 2px;
-          border-radius: 50%;
+        .logo-container {
+          position: relative;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+          padding: 8px;
+          border-radius: 16px;
+          animation: logoGlow 3s ease-in-out infinite alternate;
         }
         
-        .search-glow:focus-within {
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        @media (max-width: 768px) {
-          .mobile-app-feel {
-            border-radius: 0 0 24px 24px;
-            padding: 12px 16px;
+        @keyframes logoGlow {
+          0% { 
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            filter: hue-rotate(0deg);
           }
+          100% { 
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.6);
+            filter: hue-rotate(30deg);
+          }
+        }
+        
+        .search-modern {
+          background: linear-gradient(135deg, 
+            rgba(99, 102, 241, 0.1), 
+            rgba(139, 92, 246, 0.1));
+          border: 1px solid rgba(99, 102, 241, 0.2);
+          backdrop-filter: blur(10px);
+          transition: all 0.3s ease;
+        }
+        
+        .search-modern:focus-within {
+          background: linear-gradient(135deg, 
+            rgba(99, 102, 241, 0.15), 
+            rgba(139, 92, 246, 0.15));
+          border-color: rgba(99, 102, 241, 0.4);
+          box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1),
+                      0 8px 25px rgba(99, 102, 241, 0.15);
+        }
+        
+        .gradient-text {
+          background: linear-gradient(135deg, #60a5fa, #a78bfa, #fb7185);
+          background-size: 200% 200%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        
+        .notification-badge {
+          background: linear-gradient(135deg, #ef4444, #f97316);
+          animation: notificationPulse 2s infinite;
+        }
+        
+        @keyframes notificationPulse {
+          0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+          }
+          50% { 
+            transform: scale(1.1);
+            box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+          }
+        }
+        
+        .mobile-tabs {
+          background: linear-gradient(135deg, 
+            rgba(15, 23, 42, 0.98) 0%, 
+            rgba(30, 27, 75, 0.99) 100%);
+          backdrop-filter: blur(20px) saturate(180%);
+          border-top: 1px solid rgba(99, 102, 241, 0.2);
+          box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .mobile-tab {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+        }
+        
+        .mobile-tab.active {
+          transform: translateY(-4px);
+        }
+        
+        .mobile-tab.active::before {
+          content: '';
+          position: absolute;
+          top: -2px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 24px;
+          height: 3px;
+          background: linear-gradient(90deg, #6366f1, #8b5cf6);
+          border-radius: 2px;
+        }
+        
+        .mobile-menu-overlay {
+          background: linear-gradient(135deg, 
+            rgba(15, 23, 42, 0.95) 0%, 
+            rgba(30, 27, 75, 0.98) 100%);
+          backdrop-filter: blur(20px) saturate(180%);
+          border-left: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .profile-avatar {
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          border: 2px solid rgba(99, 102, 241, 0.3);
+          transition: all 0.3s ease;
+        }
+        
+        .profile-avatar:hover {
+          transform: scale(1.1);
+          box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .floating-orb {
+          position: absolute;
+          width: 6px;
+          height: 6px;
+          background: radial-gradient(circle, #60a5fa, transparent);
+          border-radius: 50%;
+          animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(180deg); }
+        }
+        
+        .glow-button {
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+          transition: all 0.3s ease;
+        }
+        
+        .glow-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
         }
       `}</style>
 
-      {/* Main Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 mobile-app-feel ${
-        isScrolled ? 'navbar-glass navbar-shadow' : 'bg-white/90'
+      {/* Desktop Navigation */}
+      <nav className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 ${
+        isScrolled ? 'navbar-scrolled' : 'navbar-dark'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-20">
             
-            {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="relative">
-                {/* Logo Image Placeholder - Replace src with your actual logo */}
-                <div className="logo-glow">
-                  <Image
-                    src="/logo.png" // Replace with your actual logo path
-                    alt="LearnSmart Logo"
-                    width={40}
-                    height={40}
-                    className="w-8 h-8 md:w-10 md:h-10"
-                    priority
-                  />
-                </div>
-                <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-blue-300 animate-pulse" />
+            {/* Enhanced Logo */}
+            <Link href="/" className="flex items-center space-x-4 group">
+              <div className="logo-container relative">
+                <Brain className="w-8 h-8 text-white" />
+                <div className="floating-orb" style={{top: '2px', right: '2px'}}></div>
+                <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-cyan-300 animate-pulse" />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold gradient-text">
                   LearnSmart
                 </h1>
-                <p className="text-xs text-blue-400 -mt-1">AI Teaching Platform</p>
+                <p className="text-xs text-slate-400 -mt-1 flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  AI Learning Platform
+                </p>
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-2">
-              {/* Search Bar */}
-              <div className="search-glow relative mr-4">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-400" />
+            {/* Desktop Navigation Items */}
+            <div className="hidden md:flex items-center space-x-3">
+              {/* Enhanced Search */}
+              <div className="search-modern relative mr-6">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search lessons..."
-                  className="w-64 pl-10 pr-4 py-2 rounded-full border-0 bg-blue-50/50 text-sm focus:outline-none focus:ring-0 placeholder-blue-400"
+                  placeholder="Search courses, tutorials..."
+                  className="w-72 pl-12 pr-6 py-3 rounded-2xl bg-transparent border-0 text-white placeholder-slate-400 focus:outline-none text-sm font-medium"
                 />
+                <Rocket className="absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
               </div>
 
-              {/* Navigation Items */}
-              {navItems.map((item) => (
+              {/* Navigation Items with Gradients */}
+              {navItems.map((item, index) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="nav-item-hover flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-blue-600 font-medium"
+                  className="nav-item-modern group relative flex items-center space-x-3 px-6 py-3 rounded-2xl text-slate-300 hover:text-white font-medium"
+                  style={{
+                    background: `linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1))`,
+                    border: '1px solid rgba(99, 102, 241, 0.2)'
+                  }}
                 >
-                  <item.icon className="w-5 h-5" />
+                  <div className={`p-2 rounded-xl bg-gradient-to-r ${item.gradient} bg-opacity-20`}>
+                    <item.icon className="w-5 h-5" />
+                  </div>
                   <span className="text-sm">{item.name}</span>
                 </Link>
               ))}
-            <SignedOut>
 
-               <Link
-                  
+              {/* Auth Buttons */}
+              <SignedOut>
+                <Link
                   href="/sign-in"
-                  className="nav-item-hover flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-blue-600 font-medium"
+                  className="glow-button flex items-center space-x-2 px-6 py-3 rounded-2xl text-white font-medium text-sm"
                 >
-                  <AtSignIcon className="w-5 h-5" />
-                  <span className="text-sm">SignIn</span>
+                  <AtSign className="w-5 h-5" />
+                  <span>Sign In</span>
                 </Link>
-                </SignedOut>
+              </SignedOut>
 
               {/* Notifications */}
-              <button className="nav-item-hover relative p-3 rounded-xl text-gray-700 hover:text-blue-600">
-                <Bell className="w-5 h-5" />
-                <span className="notification-pulse absolute -top-1 -right-1 w-3 h-3 bg-red-400 rounded-full"></span>
+              <button className="nav-item-modern relative p-4 rounded-2xl text-slate-300 hover:text-white bg-slate-800/50 border border-slate-700/50">
+                <Bell className="w-6 h-6" />
+                <span className="notification-badge absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-white">3</span>
+                </span>
               </button>
 
-              {/* Profile Dropdown */}
-              <div className="flex items-center space-x-3 ml-4">
-                <div className="profile-ring">
-                 <UserButton/>
+              {/* Profile Section */}
+              <SignedIn>
+                <div className="flex items-center space-x-4 ml-4">
+                  <div className="profile-avatar w-12 h-12 rounded-2xl flex items-center justify-center">
+                    <UserButton />
+                  </div>
+                  <div className="hidden lg:block">
+                    <p className="text-sm font-semibold text-white flex items-center gap-2">
+                      Alex Johnson
+                      <Star className="w-4 h-4 text-yellow-400" />
+                    </p>
+                    <p className="text-xs text-purple-400 flex items-center gap-1">
+                      <Heart className="w-3 h-3" />
+                      Pro Student
+                    </p>
+                  </div>
                 </div>
-                <div className="hidden lg:block">
-                  <p className="text-sm font-semibold text-gray-800">John Doe</p>
-                  <p className="text-xs text-blue-500"> Student</p>
-                </div>
-                <SignedIn>
-                    <Link
-                  
-                  href="/sign-in"
-                  className="nav-item-hover flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:text-blue-600 font-medium"
-                >
-                <button className="nav-item-hover p-2 rounded-lg text-gray-700 hover:text-red-500">
-                  <LogOut className="w-4 h-4" />
-                </button>
-                </Link>
-                </SignedIn>
-              </div>
+              </SignedIn>
             </div>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden nav-item-hover p-2 rounded-xl text-gray-700"
+              className="md:hidden nav-item-modern p-3 rounded-2xl text-slate-300 bg-slate-800/50 border border-slate-700/50"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-[9998]" 
-               onClick={() => setIsMobileMenuOpen(false)} />
-        )}
-
         {/* Mobile Menu */}
-        <div className={`md:hidden fixed top-0 right-0 h-full w-80 max-w-sm navbar-glass z-[9999] mobile-menu-slide ${isMobileMenuOpen ? 'open' : ''}`}>
-          <div className="p-6">
-            {/* Mobile Profile Header */}
-            <div className="flex items-center space-x-4 mb-8 pt-8">
-              <div className="profile-ring">
-                <Image
-                  src=""
-                  alt="Profile"
-                  width={48}
-                  height={48}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800">John Doe</p>
-                <p className="text-sm text-blue-500">Premium Student</p>
-              </div>
-            </div>
-
-            {/* Mobile Search */}
-            <div className="search-glow relative mb-6">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-400" />
-              <input
-                type="text"
-                placeholder="Search lessons..."
-                className="w-full pl-10 pr-4 py-3 rounded-xl border-0 bg-blue-50/50 text-sm focus:outline-none focus:ring-0 placeholder-blue-400"
-              />
-            </div>
-
-            {/* Mobile Navigation Items */}
-            <div className="space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="nav-item-hover flex items-center space-x-4 p-4 rounded-xl text-gray-700 hover:text-blue-600 block"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <item.icon className="w-6 h-6" />
-                  <span className="font-medium">{item.name}</span>
-                </Link>
-              ))}
-
-              {/* Mobile Notifications */}
-              <button className="nav-item-hover flex items-center space-x-4 p-4 rounded-xl text-gray-700 hover:text-blue-600 w-full">
-                <div className="relative">
-                  <Bell className="w-6 h-6" />
-                  <span className="notification-pulse absolute -top-1 -right-1 w-3 h-3 bg-red-400 rounded-full"></span>
+        {isMobileMenuOpen && (
+          <>
+            <div 
+              className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]" 
+              onClick={() => setIsMobileMenuOpen(false)} 
+            />
+            <div className="md:hidden fixed top-0 right-0 h-full w-80 max-w-sm mobile-menu-overlay z-[9999] transform transition-transform duration-300">
+              <div className="p-6 h-full overflow-y-auto">
+                {/* Mobile Profile */}
+                <div className="flex items-center space-x-4 mb-8 pt-8">
+                  <div className="profile-avatar w-16 h-16 rounded-2xl flex items-center justify-center">
+                    <User className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white flex items-center gap-2">
+                      Alex Johnson
+                      <Star className="w-4 h-4 text-yellow-400" />
+                    </p>
+                    <p className="text-sm text-purple-400 flex items-center gap-1">
+                      <Heart className="w-3 h-3" />
+                      Pro Student
+                    </p>
+                  </div>
                 </div>
-                <span className="font-medium">Notifications</span>
-              </button>
 
-              {/* Mobile Logout */}
-              <button className="nav-item-hover flex items-center space-x-4 p-4 rounded-xl text-gray-700 hover:text-red-500 w-full mt-8 border-t pt-6">
-                <LogOut className="w-6 h-6" />
-                <span className="font-medium">Logout</span>
-              </button>
+                {/* Mobile Search */}
+                <div className="search-modern relative mb-8 rounded-2xl">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search anything..."
+                    className="w-full pl-12 pr-4 py-4 bg-transparent border-0 text-white placeholder-slate-400 focus:outline-none rounded-2xl"
+                  />
+                </div>
+
+                {/* Mobile Navigation */}
+                <div className="space-y-3">
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="nav-item-modern flex items-center space-x-4 p-4 rounded-2xl text-slate-300 hover:text-white bg-slate-800/30 border border-slate-700/30"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <div className={`p-3 rounded-xl bg-gradient-to-r ${item.gradient} bg-opacity-20`}>
+                        <item.icon className="w-6 h-6" />
+                      </div>
+                      <span className="font-medium">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Mobile Auth */}
+                <SignedOut>
+                  <Link
+                    href="/sign-in"
+                    className="glow-button flex items-center justify-center space-x-2 w-full mt-8 py-4 rounded-2xl text-white font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <AtSign className="w-5 h-5" />
+                    <span>Sign In</span>
+                  </Link>
+                </SignedOut>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </nav>
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-16 md:h-20"></div>
+      {/* Mobile Bottom Tabs (App-like) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 mobile-tabs z-[9999]">
+        <div className="flex items-center justify-around py-2">
+          {mobileTabItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`mobile-tab flex flex-col items-center space-y-1 py-3 px-4 rounded-2xl transition-all ${
+                activeTab === item.id 
+                  ? `active ${item.color}` 
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+              onClick={() => setActiveTab(item.id)}
+            >
+              <item.icon className="w-6 h-6" />
+              <span className="text-xs font-medium">{item.name}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
 
-      {/* Demo Content */}
-     
+      {/* Spacer for fixed navbar */}
+      <div className="h-20"></div>
+      {/* Mobile bottom tabs spacer */}
+      <div className="md:hidden h-20"></div>
     </>
   );
 };

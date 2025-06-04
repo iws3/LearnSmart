@@ -41,10 +41,11 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
+    { name: 'Create', icon: Plus, href: '/companions/new', gradient: 'from-orange-500 to-red-400' },
     { name: 'AI Tutors', icon: Brain, href: '/companions', gradient: 'from-blue-500 to-cyan-400' },
-    { name: 'My Journey', icon: Map, href: '/journey', gradient: 'from-purple-500 to-pink-400' },
     { name: 'Billing', icon: DollarSign, href: '/billing', gradient: 'from-green-500 to-emerald-400' },
-    { name: 'Create', icon: Plus, href: '/companions/new', gradient: 'from-orange-500 to-red-400' }
+    { name: 'My Journey', icon: Map, href: '/journey', gradient: 'from-purple-500 to-pink-400' },
+   
   ];
 
   const mobileTabItems = [

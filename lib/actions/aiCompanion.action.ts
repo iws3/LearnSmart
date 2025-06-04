@@ -107,3 +107,14 @@ export const getUserSessions=async (userId:string, limit=10)=>{
 
     return data.map(({companions})=>companions)
 }
+
+export const getUserCompanions=async (userId:string)=>{
+    const supabase=createSupabaseClient()
+    // it will be descending from newest to oldest
+    const {data, error}=await supabase.from('companions').select()
+    .eq('author', userId)
+  
+    if(error)  throw new Error(error.message || "error occured while trying to get session_history")
+
+    return data;
+}

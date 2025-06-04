@@ -118,3 +118,49 @@ export const getUserCompanions=async (userId:string)=>{
 
     return data;
 }
+
+// new tutors permission
+export const newTutorsPermission=async ()=>{
+    const {userId, has}=await auth()
+    // check clerk doc for b2b saas apps
+    // get access to the current supabase instance
+    const supabase=createSupabaseClient()
+    let limit=0
+    if(has({plan:'pro'})){
+       limit=3
+       console.log("reaching here..........1")
+       return true
+    }
+
+    else if(has({feature:"3_active_tutors"})){
+        limit=3;
+        
+       console.log("reaching here..........2")
+    }
+
+    else if(has({feature:"10_active_tutors"})){
+        limit=3;
+        
+       console.log("reaching here.......... 3")
+    }
+console.log("final limit is : ", limit )
+    // get amount of companions user has created:
+
+    const {data, error}=await supabase.from("companions").select('id', {count:'exact'}).eq('author', userId)
+
+    if(error) throw new Error(error.message)
+    // get access to the companion count
+const tutorsCount=data?.length
+console.log("tutors count is: ", tutorsCount)
+
+if(tutorsCount >=limit){
+    console.log("its okay")
+    return false
+}
+
+else{
+    return true
+    console.log("reaching here instead")
+}
+
+}

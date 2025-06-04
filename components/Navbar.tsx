@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 import { 
   Brain, 
   Users, 
@@ -31,6 +31,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
+    const { user } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -352,7 +353,8 @@ const Navbar = () => {
                   </div>
                   <div className="hidden lg:block">
                     <p className="text-sm font-semibold text-white flex items-center gap-2">
-                      Alex Johnson
+                      {user ? user?.fullName : ""}
+                      
                       <Star className="w-4 h-4 text-yellow-400" />
                     </p>
                     <p className="text-xs text-purple-400 flex items-center gap-1">
@@ -385,12 +387,12 @@ const Navbar = () => {
               <div className="p-6 h-full overflow-y-auto">
                 {/* Mobile Profile */}
                 <div className="flex items-center space-x-4 mb-8 pt-8">
-                  <div className="profile-avatar w-16 h-16 rounded-2xl flex items-center justify-center">
-                    <User className="w-8 h-8 text-white" />
+                  <div className="profile-avatar w-12 h-12 rounded-2xl flex items-center justify-center">
+                    <UserButton />
                   </div>
                   <div>
                     <p className="font-semibold text-white flex items-center gap-2">
-                      Alex Johnson
+                        {user ? user?.fullName : ""}
                       <Star className="w-4 h-4 text-yellow-400" />
                     </p>
                     <p className="text-sm text-purple-400 flex items-center gap-1">

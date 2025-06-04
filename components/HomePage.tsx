@@ -44,6 +44,7 @@ import {
   Waves,
   Eye
 } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
 
 // Random avatar images pool
 const avatarImages = [
@@ -361,7 +362,7 @@ const TutorCard = ({ tutor, isLarge = false }) => {
     </div>
   );
 };
-
+// @ts-ignore
 const SessionCard = ({ session }) => {
   const [isActive, setIsActive] = useState(false);
   
@@ -467,6 +468,7 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:Companio
   const [searchQuery, setSearchQuery] = useState('');
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeTab, setActiveTab] = useState('tutors');
+  const {user}=useUser()
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -508,7 +510,7 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:Companio
           {/* Welcome Badge */}
           <div className="inline-flex items-center gap-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full px-6 py-3 mb-8">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            <span className="text-slate-300 font-medium">{getGreeting()}! Ready to learn?</span>
+            <span className="text-slate-300 font-medium">{getGreeting()}!, <span className='text-orange-400'>{user?.fullName}</span> Ready to learn?</span>
             <Sparkles className="w-4 h-4 text-yellow-400" />
           </div>
 
@@ -528,7 +530,7 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:Companio
           </p>
 
           {/* Enhanced Search Bar */}
-          <div className="max-w-2xl mx-auto relative mb-16">
+          <div className="max-w-2xl mx-auto relative mb-16 md:flex hidden">
             <div className="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-2 hover:bg-slate-800/70 transition-all duration-300">
               <div className="flex items-center">
                 <Search className="w-6 h-6 text-slate-400 ml-4" />
@@ -603,7 +605,7 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:Companio
               </button>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className=" items-center gap-2 md:flex hidden">
               <button className="p-3 bg-slate-800/30 border border-slate-700/50 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-300">
                 <BarChart3 className="w-5 h-5" />
               </button>

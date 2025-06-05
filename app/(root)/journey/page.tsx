@@ -250,10 +250,12 @@ const ProfileHeader = ({ user, tutorsCount, sessionsCount, favoriteSubject }: {
             <Settings className="w-5 h-5" />
             Settings
           </button>
-          <button className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+          <Link href="/quiz" className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+          
             <Edit className="w-5 h-5" />
-            Edit Profile
-          </button>
+            Answer Quiz
+            </Link>
+          
         </div>
       </div>
     </div>

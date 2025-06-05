@@ -16,6 +16,7 @@ import {
 import CountdownTimerDisplay from '../CountDownTimerDisplay';
 import QuizPromptModal from '../QuizModal';
 import { addToSessionHistory } from '@/lib/actions/aiCompanion.action';
+import { generateQuiz } from '@/lib/actions/gemini.action';
 
 // Import the new components
 // import CountdownTimerDisplay from './CountdownTimerDisplay'; // Adjust path if needed
@@ -258,8 +259,8 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
   const [connectionTimer, setConnectionTimer] = useState(0); // For "Connecting..." message
   const [audioLevel, setAudioLevel] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
   const [showQuizModal, setShowQuizModal] = useState(false); // New state for quiz modal
+  const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false); // To give user feedback
 
   const companionData: CompanionData = {
     name, subject, topic, teaching_content, language, chat_duration,
@@ -277,15 +278,68 @@ const ActualClassroom: React.FC<CompanionComponentProps> = ({
       setAudioLevel(0);
       setShowQuizModal(false); // Ensure quiz modal is hidden when a new call starts
     };
-    const onCallEnd = () => {
-      console.log("VAPI EVENT: call-end");
-      setCallStatus(CallStatus.FINISHED);
-      setIsAssistantSpeaking(false);
-      setAudioLevel(0);
-      // implement this new server action 
-      addToSessionHistory(id);
-      setShowQuizModal(true); // Show quiz modal when call ends
-    };
+    const onCallEnd = async () => { // Make it async
+          console.log("VAPI EVENT: call-end");
+          setCallStatus(CallStatus.FINISHED);
+          setIsAssistantSpeaking(false);
+          setAudioLevel(0);
+          
+          try {
+            // 1. Add to session history and get session ID
+            const session = await addToSessionHistory(id); // `id` here is companionId
+            if (!session || !session.id) {
+              console.error("Failed to create session history or get session ID.");
+              setShowQuizModal(true); // Still show quiz modal, but quiz generation might fail
+              return;
+            }
+            const sessionId = session.id;
+            console.log("Session created with ID:", sessionId);
+    
+            // 2. Prepare data for quiz generation
+            const quizData = {
+              companionId: id, // companion's ID
+              // userId will be handled by auth() in server action
+              sessionId: sessionId,
+              transcript: messages, // Pass the current messages state
+              subject: subject,
+              topic: topic,
+              language: language,
+              learningStyle: learning_style,
+              teachingContent: teaching_content, // Optional, as discussed
+              quizTitle: `${topic} Quiz with ${name}`, // Auto-generated title
+              numQuestions: 5 // Or make this configurable
+            };
+    
+            // 3. Trigger quiz generation (fire and forget for UI, or show loading)
+            setIsGeneratingQuiz(true);
+            console.log("Attempting to generate quiz with data:", quizData);
+            
+            // Don't await here if you want the UI to update immediately
+            // Let the server action handle it in the background
+            generateQuiz(quizData)
+              .then((generatedQuiz) => {
+                if (generatedQuiz) {
+                  console.log("Quiz generated successfully:", generatedQuiz.id);
+                  // You could store generatedQuiz.id somewhere if needed immediately,
+                  // or just let the QuizPromptModal lead to a page that fetches available quizzes.
+                } else {
+                  console.warn("Quiz generation did not return a quiz object or failed silently on server.");
+                }
+              })
+              .catch(error => {
+                console.error("Error calling generateQuiz:", error);
+                // Handle error, maybe show a toast notification
+              })
+              .finally(() => {
+                setIsGeneratingQuiz(false);
+              });
+    
+          } catch (error) {
+            console.error("Error in onCallEnd processing (session history or quiz trigger):", error);
+          } finally {
+            setShowQuizModal(true); // Show quiz modal regardless of quiz generation status
+          }
+        };
     const onMessage = (message: any) => {
       console.log("VAPI EVENT: message", message);
       if (message.type === 'transcript' && message.transcriptType === 'final') {

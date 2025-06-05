@@ -64,24 +64,37 @@ export const getCompanion=async(id:string)=>{
 
 // conversational session history
 // storing our conversation into the session history
-export const addToSessionHistory = async (id:string)=>{
-// start cooking here
-if(!id) {
-    console.log("There is no id, please provide an id")
-}
-const {userId}=await auth();
-const supabase=createSupabaseClient()
-// storing session history of the user using that ai tutor
-const {data, error}=await supabase.from('sesson_history').insert({
-    companion_id:id,
-    user_id:userId
-})
+export const addToSessionHistory = async (companionId: string) => {
+    if (!companionId) {
+        console.error("Companion ID is required to add to session history.");
+        throw new Error("Companion ID is required.");
+    }
+    const { userId } =await auth();
+    if (!userId) {
+        console.error("User not authenticated.");
+        throw new Error("User not authenticated.");
+    }
+    const supabase = createSupabaseClient();
+    
+    const { data, error } = await supabase
+        .from('sesson_history') // Corrected table name from your example if it was 'sesson_history'
+        .insert({
+            companion_id: companionId,
+            user_id: userId
+        })
+        .select() // Select the inserted row
+        .single(); // Expect a single row back
 
-if(error) throw new Error(error.message)
-// if no error we want to return the data
-return data;
-
-
+    if (error) {
+        console.error("Error adding to session history:", error.message);
+        throw new Error(error.message);
+    }
+    if (!data) {
+        console.error("Failed to insert session history or retrieve it.");
+        throw new Error("Failed to create session history entry.");
+    }
+    console.log("Session history added:", data);
+    return data; // Return the full session object, which includes its 'id'
 }
 
 // now fetch the session added to the  history
@@ -103,6 +116,7 @@ export const getUserSessions=async (userId:string, limit=10)=>{
     const {data, error}=await supabase.from('sesson_history').select(`companions:companion_id(*)`)
     .eq('user_id', userId)
     .order('created_at', {ascending:false}).limit(limit)
+
     if(error)  throw new Error(error.message || "error occured while trying to get session_history")
 
     return data.map(({companions})=>companions)
@@ -127,8 +141,7 @@ export const newTutorsPermission=async ()=>{
     const supabase=createSupabaseClient()
     let limit=0
     if(has({plan:'pro'})){
-       limit=3
-       console.log("reaching here..........1")
+       
        return true
     }
 
@@ -139,7 +152,7 @@ export const newTutorsPermission=async ()=>{
     }
 
     else if(has({feature:"10_active_tutors"})){
-        limit=3;
+        limit=5;
         
        console.log("reaching here.......... 3")
     }

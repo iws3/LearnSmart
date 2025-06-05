@@ -238,6 +238,7 @@ const page = () => {
             margin: 0 auto;
           }
         }
+          
       `}</style>
 
       <div className="mobile-optimized bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden">

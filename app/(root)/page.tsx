@@ -1,6 +1,6 @@
 // import CompanionBuilder from '@/components/form/TutorBuilder'
 import HomePage from '@/components/HomePage'
-import { getAllCompanions, getRecentSessions, getUserCompanions } from '@/lib/actions/aiCompanion.action'
+import { getAllCompanions, getUserSessions, getUserCompanions } from '@/lib/actions/aiCompanion.action'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import React from 'react'
@@ -16,7 +16,7 @@ const page = async() => {
     const tutors=await getUserCompanions(userId)
     console.log("here is the list of tutors data: ", tutors)
 
-    const recentSessionTutors=await getRecentSessions()
+    const recentSessionTutors=await getUserSessions(userId)
 
     console.log("here is the recent tutoring sessions data: ", recentSessionTutors)
   return (

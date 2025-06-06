@@ -545,7 +545,7 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:any}) =>
             {/* @ts-ignore */}
             Connect with personalized AI tutors across {new Set([...tutors.map(t => t.subject), ...recentSessions.map(s => s.subject)]).size} subjects. 
             <Link href="/companions/new" className="text-blue-400 cursor-pointer"> Start learning instantly</Link> with adaptive teaching styles.
-            <span>Don't trust Ai? Visit us at <Link className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2 justify-center" href="/academy">{" {iws} Academy"}</Link> </span>
+            <span>Don't trust Ai? Visit us at <Link className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2 justify-center" href="/academic">{" {iws} Academy"}</Link> </span>
           </p>
 
           {/* Enhanced Search Bar */}
@@ -640,7 +640,7 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:any}) =>
 
           {/* Content Grid */}
           {activeTab === 'tutors' && (
-            <div>
+            <div> 
               {/* Featured Tutors Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
               {/* @ts-ignore */}

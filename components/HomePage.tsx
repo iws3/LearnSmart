@@ -364,7 +364,7 @@ const TutorCard = ({ tutor, isLarge = false }) => {
 
           <button 
             onClick={() => window.location.href = `/companions/${tutor.id}`}
-            className="group/btn bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-3 rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+            className="group/btn bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-3 rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 flex items-center gap-2 cursor-pointer"
           >
             <Play className="w-4 h-4" />
             Start Session
@@ -378,8 +378,10 @@ const TutorCard = ({ tutor, isLarge = false }) => {
 // @ts-ignore
 const SessionCard = ({ session }) => {
   const [isActive, setIsActive] = useState(false);
-  
+                   // @ts-ignore
   const voiceConfig = voiceIcons[session.voice_type] || voiceIcons['Professional Male'];
+  // @ts-ignore
+
   const speakingConfig = speakingStyleIcons[session.speaking_style] || speakingStyleIcons['Conversational'];
   const VoiceIcon = voiceConfig.icon;
   const SpeakingIcon = speakingConfig.icon;
@@ -545,7 +547,7 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:any}) =>
           </p>
 
           {/* Enhanced Search Bar */}
-          <div className="max-w-2xl mx-auto relative mb-16 md:flex hidden">
+          <div className="max-w-2xl mx-auto relative mb-16 md:block hidden">
             <div className="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-2 hover:bg-slate-800/70 transition-all duration-300">
               <div className="flex items-center">
                 <Search className="w-6 h-6 text-slate-400 ml-4" />

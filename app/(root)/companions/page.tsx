@@ -99,7 +99,7 @@ const StaffRoomPage = async ({ searchParams }: { searchParams: SearchPageParams 
         currentSearchQuery={currentSearchQuery}
       />
 
-      {allUserTutors.length !== 0 ? (
+      {allUserTutors.length === 0 ? (
         <NoUserTutorsMessage />
       ) : (
         <UserTutorsSection

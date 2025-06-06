@@ -280,7 +280,7 @@ const Navbar = () => {
             {/* Enhanced Logo */}
             <Link href="/" className="flex items-center space-x-4 group">
               <div className="logo-container relative">
-                <Brain className="w-8 h-8 text-white" />
+                <Image alt='logo' src="/logo.png" width={40} height={40} className="w-8 h-8 text-white rounded-full" />
                 <div className="floating-orb" style={{top: '2px', right: '2px'}}></div>
                 <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-cyan-300 animate-pulse" />
               </div>

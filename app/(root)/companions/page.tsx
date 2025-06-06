@@ -113,7 +113,7 @@ const StaffRoomPage = async ({ searchParams }: { searchParams: SearchPageParams 
       
       <WhyChooseUsSection />
       <CallToActionSection />
-      <FooterSection />
+      {/* <FooterSection /> */}
     </div>
   );
 };

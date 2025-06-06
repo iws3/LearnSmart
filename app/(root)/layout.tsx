@@ -1,5 +1,6 @@
 
 import Navbar from "@/components/Navbar";
+import FooterSection from "@/components/tutor/FooterSection";
 
 
 
@@ -15,6 +16,7 @@ export default function Layout({
         
         <Navbar/>
         {children}
+        <FooterSection/>
        
         </body>
     </html>

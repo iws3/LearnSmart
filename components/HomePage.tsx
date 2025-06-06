@@ -45,6 +45,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
+import Link from 'next/link';
 
 // Random avatar images pool
 const avatarImages = [
@@ -543,7 +544,8 @@ const HomePage = ({ tutors, recentSessions}:{tutors:any; recentSessions:any}) =>
           <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 px-5 leading-relaxed">
             {/* @ts-ignore */}
             Connect with personalized AI tutors across {new Set([...tutors.map(t => t.subject), ...recentSessions.map(s => s.subject)]).size} subjects. 
-            <span className="text-blue-400"> Start learning instantly</span> with adaptive teaching styles.
+            <Link href="/companions/new" className="text-blue-400 cursor-pointer"> Start learning instantly</Link> with adaptive teaching styles.
+            <span>Don't trust Ai? Visit us at <Link className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2 justify-center" href="/academy">{" {iws} Academy"}</Link> </span>
           </p>
 
           {/* Enhanced Search Bar */}

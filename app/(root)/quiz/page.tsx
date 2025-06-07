@@ -269,7 +269,7 @@ export default async function MyQuizzesPage() {
 
                   {/* Action Button */}
                   <Link
-                    href={`/quizzes/${quiz.id}`}
+                    href={`/quiz/${quiz.id}`}
                     className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center space-x-2 group-hover:scale-105"
                   >
                     <PlayCircle className="w-5 h-5" />

@@ -364,11 +364,11 @@ const TutorCard = ({ tutor, isLarge = false }) => {
           </div>
 
           <button 
-            onClick={() => window.location.href = `/companions/${tutor.id}`}
+            onClick={() => window.location.href = `/quiz`}
             className="group/btn bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-3 rounded-xl font-medium text-sm hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 flex items-center gap-2 cursor-pointer"
           >
             <Play className="w-4 h-4" />
-            Start Session
+            Take Quiz
             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </button>
         </div>

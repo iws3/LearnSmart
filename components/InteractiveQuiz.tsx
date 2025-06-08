@@ -12,7 +12,7 @@ interface QuizQuestion {
   id: string;
   type: "multiple_choice" | "true_false" | "short_answer" | "fill_in_the_blank";
   text: string;
-  options?: string[]; // Options are still optional for true/false if we default them
+  options?: string[];
   correct_answer: string | string[];
   explanation?: string;
 }
@@ -50,7 +50,7 @@ const EMOJIS = {
 const getRandomItem = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
 
 const TIME_PER_QUESTION = 30;
-const FEEDBACK_DISPLAY_DURATION = 3500;
+const FEEDBACK_DISPLAY_DURATION = 4500; // Increased from 3500ms to 4500ms
 
 const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -63,7 +63,28 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const feedbackTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const quizContainerRef = useRef<HTMLDivElement>(null);
   const questions = quiz.questions || [];
+
+  // Auto-scroll to quiz on mount
+  useEffect(() => {
+    const scrollToQuiz = () => {
+      if (quizContainerRef.current) {
+        const yOffset = -20; // Offset from top
+        const element = quizContainerRef.current;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        
+        window.scrollTo({
+          top: y,
+          behavior: 'smooth'
+        });
+      }
+    };
+
+    // Delay to ensure component is fully rendered
+    const timer = setTimeout(scrollToQuiz, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const resetTimerAndFeedback = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -71,7 +92,7 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
     setIsAnswered(false);
     setFeedback(null);
     if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
-  }, []); // Removed currentQuestionIndex as it's not strictly needed for reset logic itself
+  }, []);
 
   useEffect(() => {
     resetTimerAndFeedback();
@@ -175,9 +196,7 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
       if (timerRef.current) clearInterval(timerRef.current);
-      setTimeLeft(0); // Show timer as expired for previous questions
-      // `isAnswered` and `feedback` will be reset by `resetTimerAndFeedback` via useEffect
-      // The options will show their selected/correct state based on `selectedAnswers`
+      setTimeLeft(0);
     }
   };
 
@@ -186,7 +205,6 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
     setSelectedAnswers({});
     setScore(0);
     setQuizFinished(false);
-    // resetTimerAndFeedback will be called by useEffect
   };
 
   const getQuizNicknameAndBadge = () => {
@@ -202,22 +220,23 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
     const { nickname, badge, color } = getQuizNicknameAndBadge();
     return (
       <motion.div
+        ref={quizContainerRef}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="max-w-2xl mx-auto my-12 p-8 bg-slate-800/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-slate-700 text-center"
+        className="max-w-2xl mx-auto my-8 sm:my-12 p-6 sm:p-8 bg-slate-800/70 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-700 text-center"
       >
-        <div className="mb-6">{badge}</div>
-        <h2 className={`text-4xl font-bold mb-3 ${color}`}>{nickname}!</h2>
-        <p className="text-2xl text-slate-200 mb-2">Quiz Complete!</p>
-        <p className="text-xl text-slate-300 mb-6">
+        <div className="mb-4 sm:mb-6">{badge}</div>
+        <h2 className={`text-2xl sm:text-4xl font-bold mb-2 sm:mb-3 ${color}`}>{nickname}!</h2>
+        <p className="text-xl sm:text-2xl text-slate-200 mb-1 sm:mb-2">Quiz Complete!</p>
+        <p className="text-lg sm:text-xl text-slate-300 mb-4 sm:mb-6">
           You scored <span className="font-bold text-sky-400">{score}</span> out of <span className="font-bold text-slate-200">{questions.length}</span> questions.
         </p>
-        <div className="my-6 p-4 bg-slate-700/50 rounded-xl">
-          <h3 className="text-lg font-semibold text-slate-200 mb-2">Your Performance:</h3>
-          <div className="w-full bg-slate-600 rounded-full h-6">
+        <div className="my-4 sm:my-6 p-3 sm:p-4 bg-slate-700/50 rounded-xl">
+          <h3 className="text-base sm:text-lg font-semibold text-slate-200 mb-2">Your Performance:</h3>
+          <div className="w-full bg-slate-600 rounded-full h-4 sm:h-6">
             <motion.div
-              className="bg-gradient-to-r from-sky-500 to-blue-500 h-6 rounded-full flex items-center justify-center text-sm font-medium text-white"
+              className="bg-gradient-to-r from-sky-500 to-blue-500 h-4 sm:h-6 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium text-white"
               initial={{ width: 0 }}
               animate={{ width: `${(score / questions.length) * 100}%` }}
               transition={{ duration: 1, delay: 0.2 }}
@@ -228,9 +247,9 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
         </div>
         <button
           onClick={handleRestartQuiz}
-          className="mt-8 flex items-center justify-center gap-2 w-full sm:w-auto mx-auto px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold hover:opacity-90 transition-opacity shadow-lg text-lg"
+          className="mt-6 sm:mt-8 flex items-center justify-center gap-2 w-full sm:w-auto mx-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl sm:rounded-2xl font-semibold hover:opacity-90 transition-opacity shadow-lg text-base sm:text-lg"
         >
-          <RotateCcw className="w-6 h-6" />
+          <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6" />
           <span>Play Again</span>
         </button>
       </motion.div>
@@ -247,161 +266,202 @@ const InteractiveQuiz: React.FC<InteractiveQuizProps> = ({ quiz }) => {
   }
   const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
 
-  // *** MODIFICATION FOR TRUE/FALSE OPTIONS START ***
   let displayOptions: string[] = [];
   if (currentQuestion.type === "true_false") {
-    // If options are provided for true/false (e.g., custom labels like "Yes"/"No"), use them.
-    // Otherwise, default to "True" and "False".
     if (currentQuestion.options && currentQuestion.options.length > 0) {
       displayOptions = currentQuestion.options;
     } else {
       displayOptions = ["True", "False"];
     }
   } else if (currentQuestion.options) {
-    // For other types like multiple_choice, use provided options
     displayOptions = currentQuestion.options;
   }
-  // For "short_answer" or "fill_in_the_blank", displayOptions will remain empty,
-  // and the .map below won't render buttons, which is correct for those types.
-  // *** MODIFICATION FOR TRUE/FALSE OPTIONS END ***
 
   const isNextButtonDisabled = !isAnswered || !!feedback;
 
   return (
-    <div className="max-w-3xl mx-auto my-8 p-6 sm:p-10 bg-slate-800/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-700 relative">
-      {/* Progress Bar and Question Counter */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center text-slate-300 mb-2">
-          <span className="text-sm font-medium">Question {currentQuestionIndex + 1} of {questions.length}</span>
-          <span className="text-sm font-medium">Score: {score}</span>
+    <div ref={quizContainerRef} className="max-w-4xl mx-auto my-6 sm:my-8 p-4 sm:p-6 lg:p-10">
+      {/* Mobile-First Quiz Container */}
+      <div className="bg-slate-800/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-700 relative overflow-hidden">
+        
+        {/* Progress Bar and Question Counter - Mobile Optimized */}
+        <div className="p-4 sm:p-6 border-b border-slate-700/50">
+          <div className="flex justify-between items-center text-slate-300 mb-3">
+            <span className="text-sm sm:text-base font-medium">
+              Question <span className="text-sky-400 font-bold">{currentQuestionIndex + 1}</span> of {questions.length}
+            </span>
+            <span className="text-sm sm:text-base font-medium">
+              Score: <span className="text-green-400 font-bold">{score}</span>
+            </span>
+          </div>
+          <div className="w-full bg-slate-700 rounded-full h-2 sm:h-3">
+            <motion.div
+              className="bg-gradient-to-r from-sky-500 to-blue-500 h-2 sm:h-3 rounded-full"
+              initial={{ width: `${((currentQuestionIndex) / questions.length) * 100}%` }}
+              animate={{ width: `${progressPercentage}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
         </div>
-        <div className="w-full bg-slate-700 rounded-full h-3">
+
+        {/* Timer - Mobile Optimized */}
+        <div className="px-4 sm:px-6 pt-4 sm:pt-6">
+          <div className="flex items-center justify-center mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 sm:gap-3 bg-slate-700/50 rounded-full px-4 sm:px-6 py-2 sm:py-3">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" />
+              <span className="text-slate-300 text-sm sm:text-base font-medium">Time Left:</span>
+              <span className={`text-lg sm:text-xl font-bold min-w-[3rem] text-center ${
+                timeLeft <= 10 && timeLeft > 0 
+                  ? 'text-red-400 animate-pulse' 
+                  : timeLeft === 0 
+                    ? 'text-slate-500' 
+                    : 'text-yellow-400'
+              }`}>
+                {timeLeft}s
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Question Text - Mobile Optimized */}
+        <div className="px-4 sm:px-6 mb-6 sm:mb-8">
           <motion.div
-            className="bg-gradient-to-r from-sky-500 to-blue-500 h-3 rounded-full"
-            initial={{ width: `${((currentQuestionIndex) / questions.length) * 100}%` }}
-            animate={{ width: `${progressPercentage}%` }}
-            transition={{ duration: 0.5 }}
-          />
+            key={`question_text_${currentQuestion.id || currentQuestionIndex}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="text-lg sm:text-2xl lg:text-3xl font-semibold text-slate-100 text-center leading-relaxed px-2">
+              {currentQuestion.text}
+            </h2>
+          </motion.div>
+        </div>
+
+        {/* Options - Mobile Optimized */}
+        <div className="px-4 sm:px-6 space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+          {displayOptions.map((option, index) => {
+            const answerForThisQuestion = selectedAnswers[currentQuestionIndex];
+            const isSelected = answerForThisQuestion === option;
+            
+            const isCorrectAnswer = Array.isArray(currentQuestion.correct_answer)
+              ? currentQuestion.correct_answer.includes(option)
+              : currentQuestion.correct_answer === option;
+
+            let buttonClass = "w-full text-left p-4 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 transform focus:outline-none focus:ring-4 ring-offset-2 ring-offset-slate-800 font-medium text-sm sm:text-base lg:text-lg shadow-md ";
+            
+            const questionHasBeenAttemptedOrIsReviewed = isAnswered || selectedAnswers[currentQuestionIndex] !== undefined;
+
+            if (questionHasBeenAttemptedOrIsReviewed) { 
+              if (isCorrectAnswer) {
+                buttonClass += "bg-green-500/80 border-green-400 text-white ring-green-500";
+              } else if (isSelected && !isCorrectAnswer) { 
+                buttonClass += "bg-red-500/80 border-red-400 text-white ring-red-500";
+              } else { 
+                buttonClass += "bg-slate-700 border-slate-600 text-slate-400 opacity-60 cursor-not-allowed";
+              }
+            } else {
+               buttonClass += "bg-slate-700/80 border-slate-600 hover:border-sky-500 text-slate-200 hover:text-white active:scale-[0.98]";
+            }
+
+            return (
+              <motion.button
+                key={`${currentQuestion.id}_option_${index}`}
+                onClick={() => handleAnswerSelect(option)}
+                disabled={isAnswered}
+                className={buttonClass}
+                whileHover={!isAnswered ? { y: -2, scale: 1.01 } : {}}
+                whileTap={!isAnswered ? { scale: 0.98 } : {}}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <div className="flex items-center gap-3">
+                  {currentQuestion.type !== "true_false" && (
+                    <span className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-sky-500/20 border border-sky-400 flex items-center justify-center text-sky-300 font-bold text-xs sm:text-sm">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                  )}
+                  <span className="flex-1">{option}</span>
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* Navigation Buttons - Mobile Optimized */}
+        <div className="p-4 sm:p-6 border-t border-slate-700/50">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <button
+              onClick={handlePrevQuestion}
+              disabled={currentQuestionIndex === 0 || quizFinished}
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-slate-700 text-slate-300 rounded-xl sm:rounded-2xl font-semibold hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md order-2 sm:order-1"
+            >
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              <span>Previous</span>
+            </button>
+            <button
+              onClick={handleNextQuestion}
+              disabled={isNextButtonDisabled}
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-xl sm:rounded-2xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed shadow-lg order-1 sm:order-2"
+            >
+              <span>{currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}</span>
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Timer */}
-      <div className="flex items-center justify-center mb-6 text-2xl font-bold text-slate-200">
-        <Clock className="w-7 h-7 mr-3 text-yellow-400 animate-pulse" />
-        Time Left: <span className={`ml-2 ${timeLeft <= 10 && timeLeft > 0 ? 'text-red-400 animate-ping opacity-75' : timeLeft === 0 ? 'text-slate-500' : 'text-yellow-400'}`}>{timeLeft}s</span>
-      </div>
-
-      {/* Question Text */}
-      <motion.div
-        key={`question_text_${currentQuestion.id || currentQuestionIndex}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-        className="mb-8"
-      >
-        <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-3 text-center leading-tight">
-          {currentQuestion.text}
-        </h2>
-      </motion.div>
-
-      {/* Options */}
-      <div className="space-y-4 mb-8">
-        {displayOptions.map((option, index) => { // Use `displayOptions` here
-          const answerForThisQuestion = selectedAnswers[currentQuestionIndex];
-          const isSelected = answerForThisQuestion === option;
-          
-          const isCorrectAnswer = Array.isArray(currentQuestion.correct_answer)
-            ? currentQuestion.correct_answer.includes(option)
-            : currentQuestion.correct_answer === option;
-
-          let buttonClass = "w-full text-left p-5 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 ring-offset-2 ring-offset-slate-800 font-medium text-lg shadow-md ";
-          
-          // Show feedback styling if an answer was made OR if coming back to an answered question
-          // `isAnswered` is for the current live attempt.
-          // `selectedAnswers[currentQuestionIndex]` indicates if this question (identified by index) has been answered in the past.
-          const questionHasBeenAttemptedOrIsReviewed = isAnswered || selectedAnswers[currentQuestionIndex] !== undefined;
-
-          if (questionHasBeenAttemptedOrIsReviewed) { 
-            if (isCorrectAnswer) {
-              buttonClass += "bg-green-500/80 border-green-400 text-white ring-green-500";
-            } else if (isSelected && !isCorrectAnswer) { 
-              buttonClass += "bg-red-500/80 border-red-400 text-white ring-red-500";
-            } else { 
-              buttonClass += "bg-slate-700 border-slate-600 text-slate-400 opacity-60 cursor-not-allowed";
-            }
-          } else { // Not answered yet for this attempt
-             buttonClass += "bg-slate-700/80 border-slate-600 hover:border-sky-500 text-slate-200 hover:text-white";
-          }
-
-          return (
-            <motion.button
-              key={`${currentQuestion.id}_option_${index}`}
-              onClick={() => handleAnswerSelect(option)}
-              disabled={isAnswered} // Only disable based on the current attempt's `isAnswered` state
-              className={buttonClass}
-              whileHover={!isAnswered ? { y: -3, transition: { type: 'spring', stiffness: 400, damping: 10 } } : {}}
-              whileTap={!isAnswered ? { scale: 0.98 } : {}}
-            >
-              {/* For True/False, we don't need A/B/C/D prefixes if it's just two options */}
-              {currentQuestion.type !== "true_false" && <span className="mr-3 text-sky-300">{String.fromCharCode(65 + index)}.</span>}
-              {option}
-            </motion.button>
-          );
-        })}
-      </div>
-
-      {/* Feedback Pop-up */}
+      {/* Enhanced Feedback Pop-up - Mobile Optimized */}
       <AnimatePresence>
         {feedback && (
           <motion.div
             key="feedback-popup"
-            initial={{ opacity: 0, y: 80, scale: 0.5, rotate: -10 }}
+            initial={{ opacity: 0, y: 100, scale: 0.5 }}
             animate={{
-              opacity: 1, y: 0, scale: 1, rotate: 0,
-              transition: { type: "spring", stiffness: 380, damping: 18, mass: 0.9, delay: 0.1 }
+              opacity: 1, y: 0, scale: 1,
+              transition: { type: "spring", stiffness: 300, damping: 20, delay: 0.1 }
             }}
-            exit={{ opacity: 0, y: 60, scale: 0.7, rotate: 15, transition: { duration: 0.4, ease: "anticipate" } }}
-            className={`fixed bottom-6 right-6 sm:bottom-10 sm:right-10 p-5 sm:p-6 rounded-2xl shadow-xl border-2 z-50 text-center
-              ${feedback.type === 'correct' ? 'bg-green-600/90 border-green-500' : feedback.type === 'timeout' ? 'bg-yellow-500/90 border-yellow-400' : 'bg-red-600/90 border-red-500'}
-              backdrop-blur-md max-w-sm`}
+            exit={{ 
+              opacity: 0, y: 80, scale: 0.8,
+              transition: { duration: 0.3, ease: "easeInOut" }
+            }}
+            className={`fixed inset-x-4 md:bottom-9 bottom-[50%]  right-7 sm:left-auto sm:max-w-sm p-4 sm:p-6 rounded-2xl shadow-2xl border-2 z-50 text-center
+              ${feedback.type === 'correct' 
+                ? 'bg-green-600/95 border-green-500' 
+                : feedback.type === 'timeout' 
+                  ? 'bg-yellow-500/95 border-yellow-400' 
+                  : 'bg-red-600/95 border-red-500'}
+              backdrop-blur-lg`}
           >
             <motion.div
-              animate={{ scale: [1, 1.35, 1, 1.2, 1], rotate: [0, -15, 15, -10, 10, 0] }}
-              transition={{ duration: 0.9, ease: "easeInOut", delay: 0.2, repeat: 0 }}
-              className="text-4xl sm:text-5xl mb-2 sm:mb-3"
+              animate={{ 
+                scale: [1, 1.4, 1, 1.2, 1], 
+                rotate: [0, -10, 10, -5, 5, 0] 
+              }}
+              transition={{ duration: 1, ease: "easeInOut", delay: 0.2 }}
+              className="text-4xl sm:text-5xl mb-3"
             >
               {feedback.emoji}
             </motion.div>
-            <p className="text-lg sm:text-xl font-semibold text-white mb-2">{feedback.message}</p>
+            <p className="text-lg sm:text-xl font-bold text-white mb-2">{feedback.message}</p>
             {feedback.explanation && (
-                <p className="text-xs sm:text-sm text-slate-100/90 mt-2 italic max-w-xs mx-auto leading-snug">
-                  <strong className="font-medium">Explanation:</strong> {feedback.explanation}
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+                className="mt-3 p-3 bg-black/20 rounded-lg"
+              >
+                <p className="text-xs sm:text-sm text-slate-100/90 leading-relaxed">
+                  <strong className="font-semibold">💡 Explanation:</strong>
+                  <br />
+                  {feedback.explanation}
                 </p>
+              </motion.div>
             )}
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Navigation Buttons */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mt-10 gap-4">
-        <button
-          onClick={handlePrevQuestion}
-          disabled={currentQuestionIndex === 0 || quizFinished}
-          className="flex items-center justify-center gap-2 px-8 py-4 bg-slate-700 text-slate-300 rounded-2xl font-semibold hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto shadow-md"
-        >
-          <ChevronLeft className="w-6 h-6" />
-          <span>Previous</span>
-        </button>
-        <button
-          onClick={handleNextQuestion}
-          disabled={isNextButtonDisabled}
-          className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-2xl font-semibold hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed w-full sm:w-auto shadow-lg"
-        >
-          <span>{currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}</span>
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      </div>
     </div>
   );
 };

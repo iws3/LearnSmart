@@ -455,11 +455,11 @@ const SessionCard = ({ session }) => {
             <Share2 className="w-4 h-4" />
           </button>
           <button 
-            onClick={() => window.location.href = `/session/${session.id}`}
+            onClick={() => window.location.href = `/quiz`}
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 rounded-lg font-medium text-sm hover:shadow-lg transition-all duration-300 flex items-center gap-2"
           >
             <Play className="w-3 h-3" />
-            Join
+            Quiz
           </button>
         </div>
       </div>

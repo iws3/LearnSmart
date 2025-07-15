@@ -11,14 +11,14 @@ import FailedToCreateTutor from '../FailedToCreateTutor'
 const page = async() => {
     const {userId}=await auth()
     if(!userId) redirect('/sign-in')
-const test=false
+
       // check if user still have credid
 
       const canCreateTutor=await newTutorsPermission()
       console.log("Can create tutors is- ", canCreateTutor)
   return (
     <>
-    {test ? (
+    {canCreateTutor ? (
       <>
     <CompanionBuilder/>
       
